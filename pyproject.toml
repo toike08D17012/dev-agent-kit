@@ -1,42 +1,21 @@
 [project]
-name = "python-workspace-template"
+name = "dev-agent-kit"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
-    "matplotlib>=3.10.8",
-    "numpy>=2.4.1",
-    "opencv-python>=4.11.0.86",
-    "pandas>=2.3.3",
-    "pyyaml>=6.0.3",
-    "tqdm>=4.67.1",
 ]
+
+[project.scripts]
+dev-agent-kit = "dev_agent_kit.cli:main"
 
 [dependency-groups]
 dev = [
-    "jupyter>=1.1.1",
     "mypy>=1.19.1",
     "pre-commit>=4.5.1",
     "pytest>=9.0.2",
     "ruff>=0.15.6",
-]
-
-[[tool.uv.index]]
-name = "pytorch-cpu"
-url = "https://download.pytorch.org/whl/cpu"
-explicit = true
-
-[[tool.uv.index]]
-name = "pytorch-cu130"
-url = "https://download.pytorch.org/whl/cu130"
-explicit = true
-
-[tool.uv.sources]
-torchvision = [
-    { index = "pytorch-cpu", marker = "sys_platform == 'linux' and platform_machine == 'aarch64'" },
-    { index = "pytorch-cpu", marker = "sys_platform == 'darwin'" },
-    { index = "pytorch-cu130", marker = "sys_platform == 'linux' and platform_machine == 'x86_64'" },
 ]
 
 # === Ruff Configuration ===
@@ -92,6 +71,9 @@ testpaths = ["tests"]
 python_files = ["test_*.py", "*_test.py"]
 python_functions = ["test_*"]
 addopts = "-v --tb=short"
+
+[tool.uv.build-backend]
+module-name = ["dev_agent_kit"]
 
 [[tool.mypy.overrides]]
 module = "yfinance"

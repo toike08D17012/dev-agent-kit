@@ -29,6 +29,23 @@ When using this template for a new project, update the following items first.
 
 ## Usage
 
+### 0. Distribute coding agent assets
+
+The shared instructions, skills, and agents under `agent-source/` can be expanded into host-specific layouts with this CLI.
+
+```bash
+uv run dev-agent-kit --target-dir /path/to/repository
+```
+
+By default, the command generates files for GitHub Copilot, Codex, and Claude Code. If an existing destination file has different content, the command fails; pass `--force` to overwrite generated files.
+GitHub Copilot and Codex share the root `AGENTS.md` and `.agents/skills/`. The command does not generate `.github/copilot-instructions.md` or `.github/skills/`.
+
+```bash
+uv run dev-agent-kit --target-dir /path/to/repository --force
+```
+
+Use `--disable-copilot`, `--disable-codex`, and `--disable-claude-code` to disable individual targets.
+
 ### 1. Start Dev Container
 
 Open this repository in VS Code and start the container using the recommended "Dev Containers" extension.

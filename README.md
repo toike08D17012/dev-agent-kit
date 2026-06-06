@@ -1,5 +1,5 @@
 ---
-title: Python Workspace Template
+title: dev-agent-kit
 description: Modern Python development environment with Dev Container, uv, Ruff, and Mypy
 ---
 
@@ -28,6 +28,23 @@ Dev Container、uv、Ruff、Mypyを用いたモダンな開発環境を提供し
 * **機械学習対応**: PyTorch (CPU/CUDA) の動的なインストール設定済み
 
 ## 使い方
+
+### 0. Coding agent asset の配布
+
+`agent-source/` にある共通の instructions、skills、agents は、以下の CLI で各 coding agent 用の配置に展開できます。
+
+```bash
+uv run dev-agent-kit --target-dir /path/to/repository
+```
+
+デフォルトでは GitHub Copilot、Codex、Claude Code 向けのファイルをすべて生成します。既存ファイルの内容が異なる場合は失敗し、上書きするには `--force` を指定します。
+GitHub Copilot と Codex は root の `AGENTS.md` と `.agents/skills/` を共有します。`.github/copilot-instructions.md` と `.github/skills/` は生成しません。
+
+```bash
+uv run dev-agent-kit --target-dir /path/to/repository --force
+```
+
+個別の出力先は `--disable-copilot`、`--disable-codex`、`--disable-claude-code` で無効化できます。
 
 ### 1. Dev Container の起動
 

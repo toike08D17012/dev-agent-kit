@@ -1,6 +1,6 @@
 """Smoke tests for the template package."""
 
-from python_workspace_template import __version__
+from dev_agent_kit import __version__
 
 
 def test_package_version() -> None:
