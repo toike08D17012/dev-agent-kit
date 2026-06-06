@@ -1,78 +1,247 @@
-# AGENTS.md - Python Coding Guidelines
+# AGENTS.md
 
-## 1. コーディングスタイル
+## 1. Project Overview
 
-本プロジェクトでは **[Google Python Style Guide](https://google.github.io/styleguide/pyguide.html)** をベースとして採用します。
+This repository is a Python project. Before making changes, understand the existing implementation, tests, and configuration files.
 
-### 例外事項
+Follow the existing architecture and coding patterns. Prefer small, focused changes over broad rewrites.
 
-* **Line Length (行長):** 読みやすさと現代的なディスプレイ環境を考慮し、最大 **120文字** まで許容します。
+## 2. Source of Truth
 
-### 基本的な考え方
+The following files are the source of truth for project configuration:
 
-* 可読性が高く、Pythonic（Pythonらしい）な記述を心がける。
-* 型ヒント（Type Annotations）を積極的に活用する。
-  * Python 3.14を使用するため、`typing.List`や`typing.Tuple`ではなく、標準の`list`, `tuple`などを使用する。
-* DocstringはGoogleスタイルで記述する。
-* コメントおよびDocstringは **英語** で記述する。
+* `pyproject.toml` for Python version, dependencies, Ruff, Mypy, Pytest, and packaging settings
+* Existing source files for architecture and implementation patterns
+* Existing tests for expected behavior
+* README or documentation files for user-facing behavior
 
----
+If this document conflicts with tool configuration, prefer the tool configuration and report the inconsistency.
 
-## 2. ツール (Linter / Formatter)
+## 3. Coding Style
 
-コードの品質管理には、高速なRust製ツールである **[Ruff](https://docs.astral.sh/ruff/)** を使用します。
+This project follows the [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html).
 
-また、静的型チェックには **[Mypy](https://mypy-lang.org/)** を使用し、Pythonの型ヒントの整合性を検証します。
+### Exceptions
 
----
+* Line length: up to 120 characters
 
-## 3. 開発フロー
+### General Rules
 
-コードを作成・変更した後は、コミット前に必ず以下のコマンドを実行してください。これにより、フォーマットの適用と、自動修正可能なエラーの解決が同時に行われます。
+* Write readable and Pythonic code.
+* Use type annotations where practical.
+* Use built-in generic types such as `list`, `tuple`, and `dict` when supported by the target Python version defined in `pyproject.toml`.
+* Write docstrings in Google style.
+* Write comments and docstrings in English.
+* Keep public APIs backward compatible unless a breaking change is explicitly requested.
+* Avoid unnecessary refactoring, file moves, or formatting-only changes.
 
-```bash
-# フォーマットの適用、静的解析、型チェック
-./scripts/pre-commit/ruff-format.sh && \
-./scripts/pre-commit/ruff-check.sh --fix && \
-./scripts/pre-commit/mypy.sh . && \
-./scripts/pre-commit/pytest.sh
+## 4. Tools
+
+This project uses:
+
+* Ruff for linting and formatting
+* Mypy for static type checking
+* Pytest for testing
+
+Do not change lint, type-check, or test settings just to make failures disappear.
+
+## 5. Dependency Management
+
+* Do not add new dependencies unless necessary.
+* Prefer the standard library or existing dependencies when practical.
+* Do not use `pip install` to add dependencies.
+* Use the repository-defined dependency management workflow, such as `uv add`, when adding dependencies.
+* When adding a dependency, update the appropriate project configuration and consider license compatibility.
+
+## 6. Development Flow
+
+Use a plan-first workflow for repository changes.
+
+By default, for any task that may modify repository files, the agent should create a plan file before implementation, regardless of task size.
+
+The agent may skip the plan file and implement directly only when the user explicitly instructs it to do so, such as by saying "implement directly", "skip the plan", or "make the change now".
+
+Unless the user gives such an explicit instruction, do not implement changes in the same turn as plan creation.
+
+Before editing:
+
+* Inspect the relevant source files, tests, and configuration.
+* Check whether a similar implementation already exists.
+* Understand the current behavior before proposing changes.
+
+### Plan Artifact Workflow
+
+For any task that may modify source code, tests, configuration, scripts, CI, documentation, or repository structure, create a plan file before implementation.
+
+Plan files must be created under:
+
+```text
+.agents/plans/YYYY-MM-DD-HHMM-<task-slug>.md
 ```
 
-## 4. チェックリスト
+Examples:
 
-* [ ] 1行が120文字以内に収まっているか？
-* [ ] Google Styleの命名規則（関数は`snake_case`、クラスは`PascalCase`など）に従っているか？
-* [ ] コメントとDocstringは英語で記述されているか？
-* [ ] testを作成したか？
-* [ ] コミット前に`./scripts/pre-commit/ruff-format.sh && ./scripts/pre-commit/ruff-check.sh --fix && ./scripts/pre-commit/mypy.sh . && ./scripts/pre-commit/pytest.sh`を実行したか？
+```text
+.agents/plans/2026-06-07-0130-add-integrated-gradients-tests.md
+.agents/plans/2026-06-07-0145-refactor-docker-entrypoint.md
+```
 
-## 5. アウトプット言語
+During the planning phase:
 
-特に指示がない場合、すべての回答は **日本語** で作成してください。
+* Do not modify production source code, tests, configuration, scripts, CI, or documentation.
+* Only create or update the plan file.
+* Keep the plan specific enough that the user can review and edit it before implementation.
+* Stop after writing the plan file.
+* Report the plan file path to the user.
+* Do not proceed to implementation until the user explicitly approves the plan or asks to implement it.
 
----
+A plan file must include:
 
-## 6. GitHub Copilot 利用時の指針
+```markdown
+# Plan: <task title>
 
-GitHub Copilot を利用して生成・編集する場合も、本ガイドラインは **必ず遵守** してください。
+## Goal
 
-### 6.1 生成内容の確認
+Describe the goal of the change.
 
-* 生成されたコード/ドキュメントは **必ずレビュー** し、要件・仕様・品質基準に合致することを確認する。
-* 外部ライブラリの追加が含まれる場合は、`pyproject.toml` の依存関係に反映し、ライセンスと互換性を確認する。
-* 既存の設計・命名・公開APIとの整合性を保つ。不要なリファクタリングや改行/整形の大量変更は避ける。
+## Current Understanding
 
-### 6.2 セキュリティと機密情報
+Summarize the relevant current implementation, configuration, tests, and constraints.
 
-* APIキー、パスワード、トークンなどの **機密情報は埋め込まない**。
-* 例外/ログに機密情報が含まれないよう配慮する。
+## Files Likely to Change
 
-### 6.3 テストと品質
+List the files that are expected to be changed.
 
-* 変更内容に対応するテストを追加/更新する。
-* 変更後に `./scripts/pre-commit/ruff-format.sh && ./scripts/pre-commit/ruff-check.sh --fix && ./scripts/pre-commit/mypy.sh . && ./scripts/pre-commit/pytest.sh` を実行し、問題がないことを確認する。
+## Proposed Steps
 
-### 6.4 コメント/Docstring
+Describe the implementation steps in order.
 
-* Copilot が生成したコメント/Docstringも **英語** で記述する。
-* 冗長なコメントは避け、意図・前提・例外条件を明確にする。
+## Validation Plan
+
+List the commands that should be run after implementation.
+
+## Risks and Considerations
+
+Describe risks, assumptions, compatibility concerns, and possible edge cases.
+
+## Acceptance Criteria
+
+List the conditions that must be true for the task to be considered complete.
+```
+
+During implementation:
+
+* Read the approved plan file before editing.
+* Follow the approved plan unless repository investigation reveals a better approach.
+* If the implementation meaningfully diverges from the plan, update the plan file with an `Implementation Notes` section.
+* Keep the actual changes minimal and focused.
+* Do not make unrelated changes.
+
+After editing, run the relevant checks when possible:
+
+```bash
+# This script runs `ruff check`, `ruff format`, `mypy`, and `pytest`.
+./scripts/pre-commit/checks.sh
+```
+
+If these commands cannot be run, explain why and state which commands should be run by the developer.
+
+## 7. Testing Policy
+
+* Add or update tests when changing behavior.
+* Prefer focused unit tests for small logic changes.
+* Do not delete, skip, or weaken tests just to make the test suite pass.
+* Keep test names descriptive.
+* Follow the existing test structure and fixture style.
+
+## 8. Security and Secrets
+
+* Do not hard-code API keys, passwords, tokens, private keys, or credentials.
+* Do not include secrets in logs, exceptions, comments, tests, or documentation.
+* Do not commit generated credentials or local environment files.
+* Use environment variables or existing configuration mechanisms for sensitive values.
+
+## 9. Coding Agent Workflow
+
+When using a coding agent:
+
+* Follow this guide strictly.
+* Use the Plan Artifact Workflow before implementing repository changes, unless the user explicitly asks to skip planning or implement directly.
+* Read the relevant files before generating or editing code.
+* Preserve existing design, naming, and public APIs.
+* Avoid unrelated changes.
+* Keep diffs minimal and focused.
+* Use existing utilities, abstractions, and patterns where possible.
+* Add tests for changed behavior.
+* Use the Plan Artifact Workflow before implementing repository changes.
+* Do not skip the plan file for convenience when the task modifies repository files.
+* Run relevant checks when possible.
+* In the final response, summarize:
+
+  * what was changed
+  * which files were changed
+  * which checks were run
+  * which checks could not be run, if any
+  * whether the implementation followed the approved plan or diverged from it
+
+## 10. Skills and Subagents
+
+When repository-provided skills, subagents, or agent workflows are available, use them for tasks that require repeated procedures or structured investigation.
+
+Use skills or subagents for:
+
+* repository structure investigation
+* architecture review
+* test strategy review
+* documentation generation
+* large refactoring planning
+* migration planning
+* codebase-wide impact analysis
+
+General rules:
+
+* Prefer existing skills over ad-hoc workflows when a matching skill exists.
+* Keep each subagent task narrow and evidence-based.
+* Ask subagents to report findings with relevant file paths.
+* Consolidate subagent findings before editing code.
+* Do not use skills or subagents to bypass tests, reviews, or project conventions.
+* Do not create new skills or subagents unless explicitly requested.
+* When a skill or subagent investigation informs implementation, summarize the findings in the plan file before editing.
+
+If a task produces reusable investigation results, save them as markdown only when the user or project workflow asks for persistent output.
+
+## 11. Comments and Docstrings
+
+* Comments and docstrings must be written in English.
+* Avoid redundant comments.
+* Explain intent, assumptions, constraints, and non-obvious behavior.
+* Do not write comments that merely restate the code.
+
+## 12. Language Policy
+
+* Write code comments, docstrings, test names, commit messages, and agent-facing notes in English.
+* Write final user-facing explanations in Japanese unless otherwise requested.
+* Do not mix Japanese and English in code comments unless necessary.
+
+## 13. Checklist
+
+Before implementing a change, confirm:
+
+* [ ] The relevant existing implementation was inspected.
+* [ ] A plan file was created under `.agents/plans/`.
+* [ ] The plan includes goal, current understanding, files likely to change, proposed steps, validation plan, risks, and acceptance criteria.
+* [ ] The user approved the plan or explicitly asked to implement it.
+
+Before finishing a change, confirm:
+
+* [ ] The approved plan file was read before editing.
+* [ ] The change is minimal and focused.
+* [ ] Public APIs remain compatible, unless a breaking change was requested.
+* [ ] Code follows the Google Python Style Guide.
+* [ ] Lines are within 120 characters where practical.
+* [ ] Type annotations are used where practical.
+* [ ] Comments and docstrings are written in English.
+* [ ] Tests were added or updated for behavior changes.
+* [ ] Ruff, Mypy, and Pytest were run when possible.
+* [ ] Any skipped checks are explained.
+* [ ] Any meaningful divergence from the plan was documented in the plan file.

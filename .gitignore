@@ -70,3 +70,6 @@ logs/
 
 # === Generated file by development pipeline
 .devcontainer/docker-compose.generated.yml
+
+# === Generated files by agents
+.agents/plans/
