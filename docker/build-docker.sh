@@ -7,12 +7,17 @@ export USER_NAME="${USER_NAME:-kujira}"
 export GROUP_NAME="${GROUP_NAME:-$USER_NAME}"
 
 CONTEXT=".."   # レポジトリルート
-export REPO_NAME="$(basename "$(cd "${CONTEXT}" && pwd)")"
+REPO_NAME="$(basename "$(cd "${CONTEXT}" && pwd)")"
+export REPO_NAME
 
 # bash の組込み $UID をそのまま使う（上書きしない）
-export USER_UID="${UID}"
-export USER_GID="$(id -g)"
-export USER_HOME="/home/${USER_NAME}"
+USER_UID="${UID}"
+USER_GID="$(id -g)"
+USER_HOME="/home/${USER_NAME}"
+
+export USER_UID
+export USER_GID
+export USER_HOME
 
 # ==== 実行 ====
 echo "Build args:"
