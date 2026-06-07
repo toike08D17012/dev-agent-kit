@@ -12,8 +12,7 @@ main() {
     cd "${hook_dir}/../.."
 
     if ! command -v docker >/dev/null 2>&1; then
-        echo "ERROR: docker is required. Please install/start Docker and retry." >&2
-        exit 1
+        exec pytest "$@"
     fi
 
     set +e
