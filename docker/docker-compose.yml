@@ -10,6 +10,7 @@ x-app-common: &app_common
       USER_GID: ${USER_GID:-1000}
   image: dev-agent-kit:latest
   volumes:
+    - .bash_history:/home/kujira/.bash_history
     - ../:/home/kujira/workspace/dev-agent-kit
   tty: true
   stdin_open: true
