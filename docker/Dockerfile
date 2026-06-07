@@ -27,6 +27,15 @@ RUN --mount=type=cache,target=/var/cache/apt \
         nano \
         sudo \
         gosu \
+        nodejs \
+        npm \
+        # shell linting and formatting tools
+        shellcheck \
+        shfmt \
+    # markdown linting and formatting tools
+    && npm install -g \
+        prettier \
+        markdownlint-cli2 \
     && rm -rf /var/lib/apt/lists/*
 
 ENV TZ=Asia/Tokyo
