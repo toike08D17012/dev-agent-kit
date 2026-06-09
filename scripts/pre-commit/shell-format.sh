@@ -56,7 +56,7 @@ main() {
         return
     fi
 
-    exec ./docker/run-docker.sh run_shell_format "$@"
+    exec ./docker/run-docker.sh ./scripts/pre-commit/shell-format.sh "$@"
 }
 
 main "$@"

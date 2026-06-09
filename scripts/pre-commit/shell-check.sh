@@ -63,7 +63,7 @@ main() {
         return
     fi
 
-    exec ./docker/run-docker.sh run_shell_check "$@"
+    exec ./docker/run-docker.sh ./scripts/pre-commit/shell-check.sh "$@"
 }
 
 main "$@"

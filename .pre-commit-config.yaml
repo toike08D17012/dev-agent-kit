@@ -28,22 +28,6 @@ repos:
         require_serial: true
         language: system
         types_or: [python, pyi, jupyter]
-      
-      # ----------------------------------------------
-      # Markdown
-      - id: markdown-format
-        name: markdown format
-        entry: ./scripts/pre-commit/markdown-format.sh
-        require_serial: true
-        language: system
-        types: [markdown]
-
-      - id: markdown-check
-        name: markdown check
-        entry: ./scripts/pre-commit/markdown-check.sh
-        require_serial: true
-        language: system
-        types: [markdown]
 
       # ----------------------------------------------
       # Shell

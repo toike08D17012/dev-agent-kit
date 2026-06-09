@@ -68,8 +68,11 @@ models/
 outputs/
 logs/
 
-# === Generated file by development pipeline
+# === Generated file by development pipeline ===
 .devcontainer/docker-compose.generated.yml
 
-# === Generated files by agents
+# === Generated files by agents ===
 .agents/plans/
+
+# === Docker related files ===
+docker/.bash_history

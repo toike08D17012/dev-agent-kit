@@ -33,9 +33,10 @@ RUN --mount=type=cache,target=/var/cache/apt \
         shellcheck \
         shfmt \
     # markdown linting and formatting tools
+    # Ubuntu 24.04 provides Node.js 18, so pin markdownlint-cli2 to a compatible release.
     && npm install -g \
         prettier \
-        markdownlint-cli2 \
+        markdownlint-cli2@0.16.0 \
     && rm -rf /var/lib/apt/lists/*
 
 ENV TZ=Asia/Tokyo
