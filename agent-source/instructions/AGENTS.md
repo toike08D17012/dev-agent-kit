@@ -28,7 +28,7 @@ Language-specific instructions are stored under `.agents/instructions`.
 Before editing matching files, read and follow the relevant instruction file:
 
 | File type | Instruction file |
-|---|---|
+| --- | --- |
 | Python files (`*.py`, `pyproject.toml`, test files) | `.agents/instructions/python.md` |
 | Markdown files (`*.md`) | `.agents/instructions/markdown.md` |
 | Shell scripts (`*.sh`, `*.bash`, scripts with Bash shebangs) | `.agents/instructions/shell.md` |

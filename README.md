@@ -14,18 +14,18 @@ Dev Container、uv、Ruff、Mypyを用いたモダンな開発環境を提供し
 
 このテンプレートを新規プロジェクトとして使う場合は、最初に以下を更新してください。
 
-* `README.md` / `README_en.md` のプロジェクト説明
-* `src/python_workspace_template` のディレクトリ名（例: `src/<repository_name>`）
-* `docker/docker-compose.yml` の `image` / `volumes` / `working_dir`
-* `.devcontainer/devcontainer.json` の `name` / `workspaceFolder`
+- `README.md` / `README_en.md` のプロジェクト説明
+- `src/python_workspace_template` のディレクトリ名（例: `src/<repository_name>`）
+- `docker/docker-compose.yml` の `image` / `volumes` / `working_dir`
+- `.devcontainer/devcontainer.json` の `name` / `workspaceFolder`
 
 ## 機能・特徴
 
-* **パッケージ管理**: `uv` を使用した高速な依存関係解決
-* **開発環境**: Dev Container (`.devcontainer`) による一貫した環境
-* **静的解析・フォーマット**: `ruff` による高速なLint/Format
-* **型チェック**: `mypy` による静的型チェック
-* **機械学習対応**: PyTorch (CPU/CUDA) の動的なインストール設定済み
+- **パッケージ管理**: `uv` を使用した高速な依存関係解決
+- **開発環境**: Dev Container (`.devcontainer`) による一貫した環境
+- **静的解析・フォーマット**: `ruff` による高速なLint/Format
+- **型チェック**: `mypy` による静的型チェック
+- **機械学習対応**: PyTorch (CPU/CUDA) の動的なインストール設定済み
 
 ## 使い方
 
@@ -38,13 +38,13 @@ uv run dev-agent-kit --target-dir /path/to/repository
 ```
 
 デフォルトでは GitHub Copilot、Codex、Claude Code 向けのファイルをすべて生成します。既存ファイルの内容が異なる場合は失敗し、上書きするには `--force` を指定します。
-GitHub Copilot と Codex は root の `AGENTS.md` と `.agents/skills/` を共有します。`.github/copilot-instructions.md` と `.github/skills/` は生成しません。
+root の `AGENTS.md` と `.agents/instructions/*.md` は常に生成されます。GitHub Copilot または Codex が有効な場合は `.agents/skills/` も生成します。`.github/copilot-instructions.md` と `.github/skills/` は生成しません。
 
 ```bash
 uv run dev-agent-kit --target-dir /path/to/repository --force
 ```
 
-個別の出力先は `--disable-copilot`、`--disable-codex`、`--disable-claude-code` で無効化できます。
+個別のホスト固有出力は `--disable-copilot`、`--disable-codex`、`--disable-claude-code` で無効化できます。これらのフラグは常時生成される `AGENTS.md` と `.agents/instructions/*.md` には影響しません。
 
 ### 1. Dev Container の起動
 
@@ -87,8 +87,8 @@ pytest は追加オプションもそのまま渡せます。
 
 `docker/run-docker.sh` を使うと、`nvidia-smi` の実行可否を判定して自動で切り替えます。
 
-* NVIDIA GPU が使える場合: `app-gpu` サービス（`--profile gpu`）で起動
-* NVIDIA GPU が使えない場合: `app` サービスで起動
+- NVIDIA GPU が使える場合: `app-gpu` サービス（`--profile gpu`）で起動
+- NVIDIA GPU が使えない場合: `app` サービスで起動
 
 ```bash
 # デフォルトシェル起動
@@ -115,6 +115,7 @@ FROM nvidia/cuda:13.0.2-cudnn-runtime-ubuntu24.04
 
 ## ディレクトリ構成
 
-* `.devcontainer/`: Dev Container 設定 (VS Code用)
-* `docker/`: docker関連ファイル
-* `AGENTS.md`: コーディング規約 (Google Style, Ruff設定など)
+- `.devcontainer/`: Dev Container 設定 (VS Code用)
+- `.agents/instructions/`: 言語別の coding agent instruction
+- `docker/`: docker関連ファイル
+- `AGENTS.md`: コーディング規約 (Google Style, Ruff設定など)
