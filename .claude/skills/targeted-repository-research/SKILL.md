@@ -151,8 +151,8 @@ When subagents are available, delegate by investigation type:
 * `behavior-flow-researcher`: explain runtime behavior and execution flow
 * `impact-scope-researcher`: identify affected files, tests, APIs, and risks for a potential change
 * `bug-context-researcher`: investigate errors, failures, suspicious behavior, and likely root causes
-* `test-target-researcher`: identify relevant tests and validation commands
-* `config-dependency-researcher`: investigate configuration, dependencies, tool settings, and environment behavior
+* `quality-and-test-researcher`: identify relevant tests, validation commands, and quality signals
+* `project-config-researcher`: investigate configuration, dependencies, tool settings, and environment behavior
 
 The parent agent must synthesize all subagent findings into one coherent answer.
 
