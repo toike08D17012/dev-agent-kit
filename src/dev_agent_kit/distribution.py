@@ -66,6 +66,7 @@ _COPILOT_TOOL_ALIASES: Final[dict[str, str]] = {
     "shell": "execute",
     "write": "edit",
 }
+_HOST_INSTRUCTION_FILENAMES: Final[frozenset[str]] = frozenset({"AGENTS.md", "CLAUDE.md"})
 
 
 class _DestinationWriter:
@@ -131,30 +132,51 @@ def distribute(options: DistributionOptions) -> DistributionResult:
         DistributionConflictError: If a destination file differs and force is disabled.
     """
     writer = _DestinationWriter(force=options.force)
-    shared_agent_assets_enabled = options.enable_copilot or options.enable_codex
+    shared_skills_enabled = options.enable_copilot or options.enable_codex
 
-    if shared_agent_assets_enabled:
-        _distribute_shared_agent_assets(options.source_dir, options.target_dir, writer)
+    _distribute_shared_instructions(options.source_dir, options.target_dir, writer)
+    if shared_skills_enabled:
+        _distribute_shared_skills(options.source_dir, options.target_dir, writer)
 
     if options.enable_copilot:
         _distribute_copilot(options.source_dir, options.target_dir, writer)
     if options.enable_codex:
         _distribute_codex(options.source_dir, options.target_dir, writer)
     if options.enable_claude_code:
-        _distribute_claude_code(
-            options.source_dir,
-            options.target_dir,
-            writer,
-            shared_agent_assets_enabled=shared_agent_assets_enabled,
-        )
+        _distribute_claude_code(options.source_dir, options.target_dir, writer)
 
     return DistributionResult(generated_files=writer.generated_files)
 
 
-def _distribute_shared_agent_assets(source_dir: Path, target_dir: Path, writer: _DestinationWriter) -> None:
-    """Generate assets shared by GitHub Copilot and Codex."""
-    shared_instructions = _read_required_text(source_dir / "instructions" / "AGENTS.md")
+def _distribute_shared_instructions(source_dir: Path, target_dir: Path, writer: _DestinationWriter) -> None:
+    """Generate instruction files shared by all target combinations."""
+    source_instructions_dir = source_dir / "instructions"
+    shared_instructions = _read_required_text(source_instructions_dir / "AGENTS.md")
     writer.write_text(target_dir / "AGENTS.md", shared_instructions)
+    _copy_language_instruction_files(source_instructions_dir, target_dir / ".agents" / "instructions", writer)
+
+
+def _copy_language_instruction_files(
+    source_instructions_dir: Path,
+    target_instructions_dir: Path,
+    writer: _DestinationWriter,
+) -> None:
+    """Copy top-level language instruction files into .agents/instructions."""
+    if not source_instructions_dir.is_dir():
+        raise DistributionError(f"Instructions source path is not a directory: {source_instructions_dir}")
+
+    for source_path in sorted(source_instructions_dir.glob("*.md")):
+        if source_path.name in _HOST_INSTRUCTION_FILENAMES:
+            continue
+        if source_path.is_symlink():
+            raise DistributionError(f"Symlinked instruction files are not supported: {source_path}")
+        if not source_path.is_file():
+            continue
+        writer.write_text(target_instructions_dir / source_path.name, _read_required_text(source_path))
+
+
+def _distribute_shared_skills(source_dir: Path, target_dir: Path, writer: _DestinationWriter) -> None:
+    """Generate skill assets shared by GitHub Copilot and Codex."""
     _copy_skill_directories(source_dir / "skills", target_dir / ".agents" / "skills", writer)
 
 
@@ -176,8 +198,6 @@ def _distribute_claude_code(
     source_dir: Path,
     target_dir: Path,
     writer: _DestinationWriter,
-    *,
-    shared_agent_assets_enabled: bool,
 ) -> None:
     """Generate Claude Code repository assets."""
     shared_instructions = _read_required_text(source_dir / "instructions" / "AGENTS.md")
@@ -187,7 +207,7 @@ def _distribute_claude_code(
         _format_claude_instructions(
             shared_instructions,
             claude_instructions,
-            shared_instructions_enabled=shared_agent_assets_enabled,
+            shared_instructions_enabled=True,
         ),
     )
 
