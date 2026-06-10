@@ -83,7 +83,7 @@ For any task that may modify source code, tests, configuration, scripts, CI, doc
 Plan files must be created under:
 
 ```text
-.agents/plans/YYYY-MM-DD-HHMM-<task-slug>.md
+docs/agent-reports/plans/YYYY-MM-DD-HHMM-<task-slug>.md
 ```
 
 Use the local timezone of the development environment for the timestamp.
@@ -91,8 +91,8 @@ Use the local timezone of the development environment for the timestamp.
 Examples:
 
 ```text
-.agents/plans/2026-06-07-0130-add-integrated-gradients-tests.md
-.agents/plans/2026-06-07-0145-refactor-docker-entrypoint.md
+docs/agent-reports/plans/2026-06-07-0130-add-integrated-gradients-tests.md
+docs/agent-reports/plans/2026-06-07-0145-refactor-docker-entrypoint.md
 ```
 
 During the planning phase:

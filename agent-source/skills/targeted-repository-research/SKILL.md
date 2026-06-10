@@ -80,6 +80,87 @@ If the user’s request includes multiple topics, split them into separate resea
 
 Do not ask for clarification when a reasonable interpretation exists. State the assumption and proceed.
 
+## Mandatory Delegation Contract
+
+This skill is designed to use the repository's configured custom agents/subagents.
+
+The main agent MUST use the current tool's native separate-agent mechanism when one is available.
+
+This instruction is platform-neutral. Use the matching custom agent/subagent by role name. Do not rely on tool-specific invocation syntax in this skill.
+
+The main agent MUST NOT merely role-play these subagents inside the main context.
+
+### Required Delegation Rules
+
+For any investigation that requires tracing more than two files or symbols, the main agent MUST delegate targeted investigation to the matching custom agent/subagent role.
+
+The appropriate delegation target depends on the investigation type:
+
+* For implementation location queries, delegate to `implementation-location-researcher`
+* For symbol definition and usage queries, delegate to `symbol-trace-researcher`
+* For runtime behavior queries, delegate to `behavior-flow-researcher`
+* For change impact queries, delegate to `impact-scope-researcher`
+* For error or bug context queries, delegate to `bug-context-researcher`
+* For quality or test coverage queries, delegate to `quality-and-test-researcher`
+* For configuration or dependency queries, delegate to `project-config-researcher`
+
+For complex investigations that require multiple investigation types, the main agent MUST delegate to all matching roles and synthesize the results.
+
+The main agent must wait for delegated results before writing the final answer.
+
+The main agent must synthesize delegated outputs into a coherent final answer. Do not blindly paste delegated output.
+
+### Main Agent Limits Before Delegation
+
+Before delegation, the main agent may perform only routing-level discovery.
+
+Allowed routing-level discovery:
+
+* identify the investigation type from the user request
+* check whether repository overview exists
+* search for simple keywords to understand scope
+* read the first few top-level project files if needed to route correctly
+
+Routing-level discovery does not include:
+
+* tracing multiple symbols or files
+* understanding behavior flow
+* analyzing call chains or data flow
+* evaluating impact scope
+* investigating error context
+* analyzing test coverage
+* examining configuration patterns
+
+If the task requires deeper investigation, delegate it before continuing.
+
+### Fallback Rule
+
+If the current environment does not expose any usable separate-agent mechanism, the main agent may proceed directly.
+
+When falling back, the main agent MUST record the fallback in the final answer's `Delegation Log` section and explain why delegation was not used.
+
+Do not silently skip delegation.
+
+### Delegation Log Requirement
+
+Every research result created by this skill MUST include a `Delegation Log` section when persistent output is created.
+
+Use this structure:
+
+| Role | Delegated | Result Used | Notes |
+| ---- | --------- | ----------- | ----- |
+| `implementation-location-researcher` | Yes / No | Yes / No | ... |
+| `symbol-trace-researcher` | Yes / No | Yes / No | ... |
+| `behavior-flow-researcher` | Yes / No | Yes / No | ... |
+| `impact-scope-researcher` | Yes / No | Yes / No | ... |
+| `bug-context-researcher` | Yes / No | Yes / No | ... |
+| `quality-and-test-researcher` | Yes / No | Yes / No | ... |
+| `project-config-researcher` | Yes / No | Yes / No | ... |
+
+If a role was not delegated because the investigation was routing-level only, state that clearly.
+
+If a role was not delegated because the environment could not invoke separate agents, state that clearly.
+
 ## High-Level Workflow
 
 ### 1. Understand the Request
@@ -142,9 +223,11 @@ Depending on the request, trace:
 
 Trace only the amount needed to answer the question.
 
-### 5. Delegate Focused Research
+### 5. Use Custom Agent/Subagent Roles (Required by Mandatory Delegation Contract)
 
-When subagents are available, delegate by investigation type:
+This step is mandatory when investigation requires tracing more than two files or symbols.
+
+Select the investigation type and delegate to the matching custom agent/subagent role:
 
 * `implementation-location-researcher`: locate where a feature or behavior is implemented
 * `symbol-trace-researcher`: trace definitions, references, imports, exports, and call sites
@@ -154,9 +237,9 @@ When subagents are available, delegate by investigation type:
 * `quality-and-test-researcher`: identify relevant tests, validation commands, and quality signals
 * `project-config-researcher`: investigate configuration, dependencies, tool settings, and environment behavior
 
-The parent agent must synthesize all subagent findings into one coherent answer.
+The parent agent MUST synthesize all delegated findings into one coherent answer.
 
-Subagents should not make final broad conclusions outside their assigned scope.
+Custom agents/subagents should not make final broad conclusions outside their assigned scope.
 
 ### 6. Synthesize the Answer
 
