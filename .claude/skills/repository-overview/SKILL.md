@@ -39,6 +39,78 @@ When the repository structure, tooling, architecture, or validation workflow cha
 
 Use Git history to track previous versions when needed.
 
+## Mandatory Delegation Contract
+
+This skill is designed to use the repository's configured custom agents/subagents.
+
+The main agent MUST use the current tool's native separate-agent mechanism when one is available.
+
+This instruction is platform-neutral. Use the matching custom agent/subagent by role name. Do not rely on tool-specific invocation syntax in this skill.
+
+The main agent MUST NOT merely role-play these subagents inside the main context.
+
+### Required Delegation Rules
+
+For any repository overview that goes beyond basic file listing, the main agent MUST delegate detailed investigation to the matching custom agent/subagent roles.
+
+The main agent MUST delegate to:
+
+* `repo-structure-researcher` for repository mapping and directory roles
+* `project-config-researcher` for build, test, lint, format, and tooling configuration
+* `runtime-architecture-researcher` for entrypoints, execution flow, and core architecture
+* `quality-and-test-researcher` for testing strategy and coverage visibility
+* `documentation-consistency-researcher` for documentation accuracy and consistency
+
+The main agent must wait for delegated results before writing the final overview.
+
+The main agent must synthesize delegated outputs into a coherent final overview. Do not blindly paste delegated output.
+
+### Main Agent Limits Before Delegation
+
+Before delegation, the main agent may perform only routing-level discovery.
+
+Allowed routing-level discovery:
+
+* list top-level files and directories
+* identify project type from config file names
+* search for presence of key files (README, pyproject.toml, Dockerfile, etc.)
+* determine whether reports already exist
+
+Routing-level discovery does not include:
+
+* reading project configuration files in detail
+* analyzing build or test commands
+* understanding repository structure and roles
+* tracing runtime flow or architecture
+* identifying test coverage patterns
+* reviewing documentation consistency
+
+If the task requires deeper investigation, delegate it before continuing.
+
+### Fallback Rule
+
+If the current environment does not expose any usable separate-agent mechanism, the main agent may proceed directly.
+
+When falling back, the main agent MUST record the fallback in the overview's `Delegation Log` section and explain why delegation was not used.
+
+Do not silently skip delegation.
+
+### Delegation Log Requirement
+
+Every repository overview created by this skill MUST include a `Delegation Log` section.
+
+Use this structure:
+
+| Role | Delegated | Result Used | Notes |
+| ---- | --------- | ----------- | ----- |
+| `repo-structure-researcher` | Yes / No | Yes / No | ... |
+| `project-config-researcher` | Yes / No | Yes / No | ... |
+| `runtime-architecture-researcher` | Yes / No | Yes / No | ... |
+| `quality-and-test-researcher` | Yes / No | Yes / No | ... |
+| `documentation-consistency-researcher` | Yes / No | Yes / No | ... |
+
+If a role was not delegated because the investigation was minimal or the environment could not invoke separate agents, state that clearly.
+
 ## Investigation Principles
 
 Follow these principles:
@@ -162,9 +234,11 @@ Produce a final overview that includes:
 * Recommended next actions
 * Evidence list
 
-## Subagent Delegation
+## Custom Agent/Subagent Roles (Required by Mandatory Delegation Contract)
 
-When subagents are available, delegate as follows:
+When subagents are available, delegate to each role to gather information for each investigation area.
+
+The main agent MUST delegate to all applicable roles unless the change is minimal or the environment cannot support separate agents.
 
 ### `repo-structure-researcher`
 
@@ -214,8 +288,8 @@ Use for:
 * Missing documentation
 * Stale references
 
-The parent agent must synthesize all subagent findings into one coherent report.
-Subagents should not make broad final conclusions outside their assigned scope.
+The parent agent MUST synthesize all delegated findings into one coherent report.
+Custom agents/subagents should not make broad final conclusions outside their assigned scope.
 
 ## Output Style
 

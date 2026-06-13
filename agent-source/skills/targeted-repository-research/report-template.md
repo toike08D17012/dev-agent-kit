@@ -89,3 +89,12 @@ Use this section when the topic involves a potential change.
 | `path/to/file`             |                |
 | `path/to/file:symbol_name` |                |
 | command result             |                |
+
+## 12. Delegation Log
+
+Use this section only when delegation was required, attempted, or skipped due to
+environment limitations.
+
+| Role | Delegated | Result Used | Notes |
+| ---- | --------- | ----------- | ----- |
+| | | | |
