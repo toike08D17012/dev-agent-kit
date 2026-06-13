@@ -1,8 +1,7 @@
 ---
-
 name: implementation-plan
 description: Use this skill when the user wants to create an implementation plan for a repository change. This skill assumes that prerequisite investigation results may already exist in files, but it can delegate targeted read-only investigation, strategy design, and quality review to configured custom agents/subagents before producing a concrete implementation plan.
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---
 
 # Implementation Plan Skill
 
