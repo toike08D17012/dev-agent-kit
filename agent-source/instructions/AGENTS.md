@@ -74,6 +74,8 @@ If checks cannot be run, explain why. In the final response, state which checks 
 
 ## 9. Language Policy
 
-- Write code comments, docstrings, test names, commit messages, and agent-facing notes in English.
-- Write final user-facing explanations in Japanese unless otherwise requested.
+- Use Japanese for user-facing communication, including progress updates and final responses, unless otherwise requested.
+- Use English for repository-facing and agent-facing text, including code comments, docstrings, test names, commit messages, implementation plans, research reports, investigation notes, TODO lists, checklists, and handoff notes.
 - Follow the existing language style of user-facing documentation.
+- Keep agent-facing notes concise and avoid repeating instructions already defined in this file or in language-specific instruction files.
+- Do not expose private chain-of-thought. When explaining decisions, provide a concise Japanese summary of the rationale, evidence, changes made, and validation results.
