@@ -106,15 +106,15 @@ However, create or update a targeted research report when:
 
 Create or update the report under:
 
-* `docs/agent-reports/targeted-research/<topic-slug>.md`
+* `docs/agent-reports/research/<topic-slug>.md`
 
 Use a short, lowercase, kebab-case topic slug.
 
 Examples:
 
-* `docs/agent-reports/targeted-research/dataset-loading-flow.md`
-* `docs/agent-reports/targeted-research/model-checkpoint-loading.md`
-* `docs/agent-reports/targeted-research/precommit-ruff-behavior.md`
+* `docs/agent-reports/research/dataset-loading-flow.md`
+* `docs/agent-reports/research/model-checkpoint-loading.md`
+* `docs/agent-reports/research/precommit-ruff-behavior.md`
 
 If a report for the same topic already exists, read it first, verify whether it is
 still accurate, and update it in place instead of creating a dated copy.
