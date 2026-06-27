@@ -1,192 +1,200 @@
-# Implementation Plan: <Title>
+# 実装計画: <タイトル>
 
-## 1. Summary
+## 1. 概要
 
 <!--
-Briefly describe what will be implemented and why.
-Keep this section short.
+実装する内容と理由を簡潔に記載する。
+このセクションは短く保つ。
 -->
 
-## 2. User Request
+## 2. ユーザー依頼
 
 <!--
-Restate the user's request in implementation-oriented terms.
+ユーザー依頼を実装観点で言い換える。
 -->
 
-## 3. Source Material
+## 3. 参照資料
 
 <!--
-List investigation reports, design notes, source files, tests, and configuration files used to create this plan.
+この計画の作成に使った調査レポート、設計メモ、ソースファイル、テスト、設定ファイルを列挙する。
 
-Examples:
+例:
 - `docs/agent-reports/investigations/...`
 - `src/...`
 - `tests/...`
 - `pyproject.toml`
 -->
 
-## 4. Confirmed Current State
+## 4. 委任ログ
+
+| 役割 | 委任 | 結果を使用 | メモ |
+| --- | --- | --- | --- |
+| `implementation-plan-context-researcher` | はい / いいえ | はい / いいえ | ... |
+| `implementation-plan-strategy-designer` | はい / いいえ | はい / いいえ | ... |
+| `implementation-plan-quality-reviewer` | はい / いいえ | はい / いいえ | ... |
+
+## 5. 確認済みの現状
 
 <!--
-Summarize facts confirmed through existing reports and targeted read-only investigation.
+既存レポートと対象を絞った読み取り専用調査で確認した事実を要約する。
 
-Include:
-- relevant modules/files
-- relevant classes/functions
-- current behavior
-- existing tests
-- relevant configuration
-- known constraints
+含める内容:
+- 関連モジュール / ファイル
+- 関連クラス / 関数
+- 現在の挙動
+- 既存テスト
+- 関連設定
+- 既知の制約
 -->
 
-## 5. Requirements
+## 6. 要件
 
-### Functional Requirements
-
-* [ ] ...
-
-### Non-Functional Requirements
+### 機能要件
 
 * [ ] ...
 
-### Compatibility Requirements
+### 非機能要件
 
 * [ ] ...
 
-## 6. Assumptions
+### 互換性要件
+
+* [ ] ...
+
+## 7. 前提
 
 <!--
-List assumptions made to proceed with the plan.
-These should be reasonable, explicit, and easy to revisit.
+計画を進めるために置いた前提を列挙する。
+前提は妥当で、明示的で、あとから見直しやすい内容にする。
 -->
 
 * ...
 
-## 7. Open Questions
+## 8. 未解決の質問
 
 <!--
-Separate blocking and non-blocking questions.
-If there are no open questions, write "None".
+ブロッキングな質問と非ブロッキングな質問を分ける。
+未解決の質問がない場合は「なし」と書く。
 -->
 
-### Blocking
+### ブロッキング
 
-* None
+* なし
 
-### Non-Blocking
+### 非ブロッキング
 
-* None
+* なし
 
-## 8. Proposed Approach
+## 9. 提案アプローチ
 
 <!--
-Describe the selected implementation strategy.
-Explain why this approach is preferred.
+採用する実装戦略を説明する。
+このアプローチを選ぶ理由も記載する。
 -->
 
-## 9. Considered Options
+## 10. 検討した選択肢
 
 <!--
-Use this section when there are multiple reasonable implementation approaches.
-For small changes, this section can be short.
+妥当な実装アプローチが複数ある場合に使う。
+小さな変更では短くてよい。
 -->
 
-### Option A: <Name>
+### 選択肢 A: <名前>
 
-Pros:
-
-* ...
-
-Cons:
+利点:
 
 * ...
 
-Decision:
-
-* Selected / Rejected because ...
-
-### Option B: <Name>
-
-Pros:
+欠点:
 
 * ...
 
-Cons:
+判断:
+
+* 採用 / 不採用: ...
+
+### 選択肢 B: <名前>
+
+利点:
 
 * ...
 
-Decision:
+欠点:
 
-* Selected / Rejected because ...
+* ...
 
-## 10. Implementation Steps
+判断:
 
-### Phase 1: Preparation
+* 採用 / 不採用: ...
 
-* [ ] ...
+## 11. 実装手順
 
-### Phase 2: Core Implementation
-
-* [ ] ...
-
-### Phase 3: Tests
+### フェーズ 1: 準備
 
 * [ ] ...
 
-### Phase 4: Documentation and Cleanup
+### フェーズ 2: コア実装
 
 * [ ] ...
 
-## 11. File-Level Change Plan
+### フェーズ 3: テスト
 
-| File           | Planned Change |
+* [ ] ...
+
+### フェーズ 4: ドキュメントと整理
+
+* [ ] ...
+
+## 12. ファイル単位の変更計画
+
+| ファイル       | 予定変更       |
 | -------------- | -------------- |
 | `path/to/file` | ...            |
 
-## 12. Validation Plan
+## 13. 検証計画
 
-### Automated Checks
+### 自動チェック
 
-Run the following commands:
+次のコマンドを実行する:
 
 ```bash
-# Example
+# 例
 scripts/pre-commit/checks.sh
 ```
 
-Expected result:
+期待結果:
 
-* All checks pass.
+* すべてのチェックが通る。
 
-### Manual Verification
+### 手動確認
 
 <!--
-Add manual verification steps when automated tests are not enough.
-If not needed, write "Not required".
+自動テストだけでは不十分な場合、手動確認手順を追加する。
+不要な場合は「不要」と書く。
 -->
 
 * ...
 
-## 13. Risks and Mitigations
+## 14. リスクと緩和策
 
-| Risk | Impact | Mitigation |
+| リスク | 影響 | 緩和策 |
 | ---- | ------ | ---------- |
 | ...  | ...    | ...        |
 
-## 14. Rollback Plan
+## 15. ロールバック計画
 
 <!--
-Describe how to revert, disable, or safely back out the change.
+変更を安全に戻す、無効化する、または取り消す方法を説明する。
 -->
 
-## 15. Done Criteria
+## 16. 完了条件
 
-The implementation is complete when:
+実装は次の条件を満たすと完了です:
 
-* [ ] Required behavior is implemented.
-* [ ] Relevant tests are added or updated.
-* [ ] Existing tests pass.
-* [ ] Lint and formatting checks pass.
-* [ ] Type checks pass, if applicable.
-* [ ] Documentation is updated, if applicable.
-* [ ] No unrelated changes are included.
+* [ ] 必要な挙動が実装されている。
+* [ ] 関連テストが追加または更新されている。
+* [ ] 既存テストが通る。
+* [ ] lint とフォーマットチェックが通る。
+* [ ] 該当する場合、型チェックが通る。
+* [ ] 該当する場合、ドキュメントが更新されている。
+* [ ] 無関係な変更が含まれていない。

@@ -29,6 +29,9 @@ Apply these instructions when editing:
 
 * Write agent-facing instructions in English.
 * Write user-facing documentation in the language used by the surrounding documentation.
+* Write final plan, research, and repository-overview artifacts in Japanese unless the user explicitly requests another language. This includes `docs/agent-reports/plans/`, `docs/agent-reports/research/`, and `docs/agent-reports/repository-overview.md`.
+* Use English for all main-agent/subagent communication, including delegated prompts, intermediate reports, review notes, and handoff material.
+* Prefer English for private reasoning where possible, but do not expose private chain-of-thought.
 * When documentation is primarily Japanese, use natural Japanese.
 * Do not mix Japanese and English in the same sentence unless technical terms make it necessary.
 * Keep code identifiers, command names, file paths, and tool names unchanged.
@@ -83,7 +86,11 @@ When adding Mermaid diagrams:
 
 ## 6. Plan Files
 
-Plan files under `.agents/plans/` must be specific enough for review before implementation.
+Plan files under `.agents/plans/` and final implementation plan files under
+`docs/agent-reports/plans/` must be specific enough for review before
+implementation.
+Write these plan files in Japanese unless the user explicitly requests another
+language.
 
 A plan file should include:
 

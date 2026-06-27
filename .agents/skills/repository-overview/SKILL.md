@@ -39,6 +39,24 @@ When the repository structure, tooling, architecture, or validation workflow cha
 
 Use Git history to track previous versions when needed.
 
+## Language Policy
+
+The repository overview report is a final artifact and MUST be written in Japanese
+unless the user explicitly requests another language.
+
+This requirement applies to visible headings, summaries, table labels, risks,
+unknowns, recommendations, and evidence notes. Keep code identifiers, file paths,
+commands, symbols, configuration keys, and quoted source text unchanged.
+
+Use English for all main-agent/subagent communication, including delegated prompts,
+intermediate investigation reports, review notes, and handoff material.
+
+The main agent MUST synthesize English delegated outputs into a Japanese final
+repository overview.
+
+Prefer English for private reasoning where possible, but do not expose private
+chain-of-thought.
+
 ## Mandatory Delegation Contract
 
 This skill is designed to use the repository's configured custom agents/subagents.
@@ -60,6 +78,8 @@ The main agent MUST delegate to:
 * `runtime-architecture-researcher` for entrypoints, execution flow, and core architecture
 * `quality-and-test-researcher` for testing strategy and coverage visibility
 * `documentation-consistency-researcher` for documentation accuracy and consistency
+
+Delegated roles must write their returned reports in English.
 
 The main agent must wait for delegated results before writing the final overview.
 
@@ -101,13 +121,13 @@ Every repository overview created by this skill MUST include a `Delegation Log` 
 
 Use this structure:
 
-| Role | Delegated | Result Used | Notes |
+| 役割 | 委任 | 結果を使用 | メモ |
 | ---- | --------- | ----------- | ----- |
-| `repo-structure-researcher` | Yes / No | Yes / No | ... |
-| `project-config-researcher` | Yes / No | Yes / No | ... |
-| `runtime-architecture-researcher` | Yes / No | Yes / No | ... |
-| `quality-and-test-researcher` | Yes / No | Yes / No | ... |
-| `documentation-consistency-researcher` | Yes / No | Yes / No | ... |
+| `repo-structure-researcher` | はい / いいえ | はい / いいえ | ... |
+| `project-config-researcher` | はい / いいえ | はい / いいえ | ... |
+| `runtime-architecture-researcher` | はい / いいえ | はい / いいえ | ... |
+| `quality-and-test-researcher` | はい / いいえ | はい / いいえ | ... |
+| `documentation-consistency-researcher` | はい / いいえ | はい / いいえ | ... |
 
 If a role was not delegated because the investigation was minimal or the environment could not invoke separate agents, state that clearly.
 
@@ -294,6 +314,8 @@ Custom agents/subagents should not make broad final conclusions outside their as
 ## Output Style
 
 Use concise but useful Markdown.
+Write the final repository overview in Japanese unless the user explicitly requests
+another language.
 
 Every important claim should be grounded by at least one of:
 
@@ -303,11 +325,11 @@ Every important claim should be grounded by at least one of:
 * Symbol name
 * Explicit uncertainty note
 
-Use labels:
+Use Japanese labels such as:
 
-* `Confirmed:` for facts grounded in files
-* `Inferred:` for reasonable conclusions
-* `Unknown:` for unresolved items
+* `確認済み:` for facts grounded in files
+* `推定:` for reasonable conclusions
+* `不明:` for unresolved items
 
 ## Completion Criteria
 

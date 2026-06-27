@@ -46,6 +46,25 @@ The main agent should avoid doing heavy repository investigation directly.
 
 The main agent is accountable for the final plan, but it is not expected to perform all low-level investigation itself.
 
+## Language Policy
+
+The final implementation plan file is a final artifact and MUST be written in
+Japanese unless the user explicitly requests another language.
+
+This requirement applies to visible headings, summaries, requirements, assumptions,
+open questions, implementation steps, validation descriptions, risks, rollback
+guidance, and done criteria. Keep code identifiers, file paths, commands, symbols,
+configuration keys, and quoted source text unchanged.
+
+Use English for all main-agent/subagent communication, including delegated prompts,
+context research reports, strategy reports, review reports, and handoff material.
+
+The main agent MUST synthesize English delegated outputs into a Japanese final
+implementation plan.
+
+Prefer English for private reasoning where possible, but do not expose private
+chain-of-thought.
+
 ## Mandatory Delegation Contract
 
 This skill is designed to use the repository's configured custom agents/subagents.
@@ -112,11 +131,11 @@ Every implementation plan created by this skill MUST include a `Delegation Log` 
 
 Use this structure:
 
-| Role                                     | Delegated | Result Used | Notes |
+| 役割                                     | 委任      | 結果を使用  | メモ  |
 | ---------------------------------------- | --------- | ----------- | ----- |
-| `implementation-plan-context-researcher` | Yes / No  | Yes / No    | ...   |
-| `implementation-plan-strategy-designer`  | Yes / No  | Yes / No    | ...   |
-| `implementation-plan-quality-reviewer`   | Yes / No  | Yes / No    | ...   |
+| `implementation-plan-context-researcher` | はい / いいえ | はい / いいえ | ... |
+| `implementation-plan-strategy-designer`  | はい / いいえ | はい / いいえ | ... |
+| `implementation-plan-quality-reviewer`   | はい / いいえ | はい / いいえ | ... |
 
 If a role was not delegated because the change was small, local, and low-risk, state that clearly.
 
@@ -140,7 +159,7 @@ Delegate to this role before inspecting:
 * examples or documentation
 * similar implementations in the repository
 
-The expected output is a factual context research report.
+The expected output is a factual context research report in English.
 
 The report should include:
 
@@ -166,7 +185,8 @@ Delegate to this role when you need:
 * rollback plan
 * done criteria
 
-The expected output is a strategy report that the main agent can merge into the final plan.
+The expected output is a strategy report in English that the main agent can merge
+into the final plan.
 
 ### `implementation-plan-quality-reviewer`
 
@@ -182,7 +202,7 @@ Delegate to this role before finalizing the plan when:
 
 For very small local changes, this review is optional.
 
-The expected output is a review report containing:
+The expected output is a review report in English containing:
 
 * required fixes
 * missing information
@@ -392,6 +412,8 @@ Ask the delegated role to return:
 * risks and constraints
 * missing or unclear information
 
+The delegated role's returned report must be written in English.
+
 The main agent should review the delegated result and decide whether enough information exists to plan.
 
 ### Step 4: Identify Remaining Missing Information
@@ -440,6 +462,8 @@ Ask the delegated role to return:
 * rollback plan
 * done criteria
 
+The delegated role's returned strategy report must be written in English.
+
 The main agent should not blindly copy the strategy result.
 
 The main agent must synthesize it into the final implementation plan and resolve inconsistencies.
@@ -456,7 +480,10 @@ If the template does not exist, use the template structure defined in this skill
 
 Fill every section.
 
-If a section is not applicable, write `Not applicable`.
+If a section is not applicable, write `該当なし`.
+
+Write the final visible plan content in Japanese, except for code identifiers, file
+paths, commands, symbols, configuration keys, and quoted source text.
 
 The plan must include:
 
@@ -496,6 +523,8 @@ Ask the delegated role to identify:
 * validation gaps
 * unclear implementation steps
 * suggested improvements
+
+The delegated role's returned review report must be written in English.
 
 Apply required fixes before writing the final plan file.
 
@@ -538,6 +567,8 @@ mkdir -p docs/agent-reports/plans
 ```
 
 The implementation plan is the primary output of this skill.
+The implementation plan file must be written in Japanese unless the user explicitly
+requests another language.
 
 Do not implement the change unless the user explicitly asks to proceed with implementation.
 
@@ -551,6 +582,8 @@ After creating the plan file, respond with only:
 * recommended next step
 
 Do not paste the entire plan unless the user asks for it.
+Write this final response in Japanese unless the user explicitly requests another
+language.
 
 ## Implementation Plan Template
 
@@ -562,144 +595,144 @@ agents/skills/implementation-plan/templates/implementation-plan.md
 
 If the template file does not exist, use this structure:
 
-````markdown
-# Implementation Plan: <Title>
+`````markdown
+# 実装計画: <タイトル>
 
-## 1. Summary
+## 1. 概要
 
-<Briefly describe what will be implemented and why.>
+<実装する内容と理由を簡潔に記載する。>
 
-## 2. User Request
+## 2. ユーザー依頼
 
-<Restate the user's request in implementation-oriented terms.>
+<ユーザー依頼を実装観点で言い換える。>
 
-## 3. Source Material
+## 3. 参照資料
 
-<Reference investigation reports, design notes, issues, source files, tests, delegated reports, and configuration files used to create this plan.>
+<この計画の作成に使った調査レポート、設計メモ、issue、ソースファイル、テスト、委任レポート、設定ファイルを列挙する。>
 
-## 4. Delegation Log
+## 4. 委任ログ
 
-| Role | Delegated | Result Used | Notes |
+| 役割 | 委任 | 結果を使用 | メモ |
 | --- | --- | --- | --- |
-| `implementation-plan-context-researcher` | Yes / No | Yes / No | ... |
-| `implementation-plan-strategy-designer` | Yes / No | Yes / No | ... |
-| `implementation-plan-quality-reviewer` | Yes / No | Yes / No | ... |
+| `implementation-plan-context-researcher` | はい / いいえ | はい / いいえ | ... |
+| `implementation-plan-strategy-designer` | はい / いいえ | はい / いいえ | ... |
+| `implementation-plan-quality-reviewer` | はい / いいえ | はい / いいえ | ... |
 
-## 5. Confirmed Current State
+## 5. 確認済みの現状
 
-<List repository facts confirmed by investigation.>
+<調査で確認したリポジトリ上の事実を列挙する。>
 
-## 6. Requirements
+## 6. 要件
 
-### Functional Requirements
-
-- [ ] ...
-
-### Non-Functional Requirements
+### 機能要件
 
 - [ ] ...
 
-### Compatibility Requirements
+### 非機能要件
 
 - [ ] ...
 
-## 7. Assumptions
+### 互換性要件
+
+- [ ] ...
+
+## 7. 前提
 
 - ...
 
-## 8. Open Questions
+## 8. 未解決の質問
 
-### Blocking
+### ブロッキング
 
-- None
+- なし
 
-### Non-Blocking
+### 非ブロッキング
 
-- None
+- なし
 
-## 9. Proposed Approach
+## 9. 提案アプローチ
 
-<Describe the selected implementation approach.>
+<採用する実装アプローチを説明する。>
 
-## 10. Considered Options
+## 10. 検討した選択肢
 
-### Option A: <Name>
+### 選択肢 A: <名前>
 
-Pros:
-
-- ...
-
-Cons:
+利点:
 
 - ...
 
-Decision:
+欠点:
 
-- Selected / Rejected because ...
+- ...
 
-## 11. Implementation Steps
+判断:
 
-### Phase 1: Preparation
+- 採用 / 不採用: ...
 
-- [ ] ...
+## 11. 実装手順
 
-### Phase 2: Core Implementation
-
-- [ ] ...
-
-### Phase 3: Tests
+### フェーズ 1: 準備
 
 - [ ] ...
 
-### Phase 4: Documentation and Cleanup
+### フェーズ 2: コア実装
 
 - [ ] ...
 
-## 12. File-Level Change Plan
+### フェーズ 3: テスト
 
-| File | Planned Change |
+- [ ] ...
+
+### フェーズ 4: ドキュメントと整理
+
+- [ ] ...
+
+## 12. ファイル単位の変更計画
+
+| ファイル | 予定変更 |
 | --- | --- |
 | `path/to/file` | ... |
 
-## 13. Validation Plan
+## 13. 検証計画
 
-### Automated Checks
+### 自動チェック
 
 ```bash
 <commands>
-````
+```
 
-Expected result:
-
-* ...
-
-### Manual Verification
+期待結果:
 
 * ...
 
-## 14. Risks and Mitigations
+### 手動確認
 
-| Risk | Impact | Mitigation |
+* ...
+
+## 14. リスクと緩和策
+
+| リスク | 影響 | 緩和策 |
 | ---- | ------ | ---------- |
 | ...  | ...    | ...        |
 
-## 15. Rollback Plan
+## 15. ロールバック計画
 
-<Describe how to revert or disable the change if needed.>
+<必要に応じて変更を戻す、または無効化する方法を説明する。>
 
-## 16. Done Criteria
+## 16. 完了条件
 
-The implementation is complete when:
+実装は次の条件を満たすと完了です:
 
-* [ ] Required behavior is implemented.
-* [ ] Relevant tests are added or updated.
-* [ ] Existing tests pass.
-* [ ] Lint and formatting checks pass.
-* [ ] Type checks pass, if applicable.
-* [ ] Documentation is updated, if applicable.
-* [ ] No unrelated changes are included.
+* [ ] 必要な挙動が実装されている。
+* [ ] 関連テストが追加または更新されている。
+* [ ] 既存テストが通る。
+* [ ] lint とフォーマットチェックが通る。
+* [ ] 該当する場合、型チェックが通る。
+* [ ] 該当する場合、ドキュメントが更新されている。
+* [ ] 無関係な変更が含まれていない。
 
-````
+`````
 
 ## Plan Creation Rules
 
@@ -712,12 +745,13 @@ When creating an implementation plan:
 5. Delegate quality review to the `implementation-plan-quality-reviewer` role for non-trivial plans.
 6. Create a plan file under `docs/agent-reports/plans/`.
 7. Use `agents/skills/implementation-plan/templates/implementation-plan.md` as the base template when available.
-8. Fill every section of the template.
-9. If a section is not applicable, write `Not applicable` instead of deleting it.
-10. Include a `Delegation Log` section in every plan.
-11. Do not modify source code during this skill.
-12. Do not run formatters or tests unless they are needed for investigation and do not modify files.
-13. In the final response, report only:
+8. Write the final visible plan content in Japanese unless the user explicitly requests another language.
+9. Fill every section of the template.
+10. If a section is not applicable, write `該当なし` instead of deleting it.
+11. Include a `Delegation Log` section in every plan.
+12. Do not modify source code during this skill.
+13. Do not run formatters or tests unless they are needed for investigation and do not modify files.
+14. In the final response, report only:
     - the created plan file path
     - a short summary
     - blocking open questions, if any
@@ -760,6 +794,7 @@ Constraints:
 - Do not implement the change.
 - Do not create the final implementation plan file.
 - Keep the investigation focused on information needed for implementation planning.
+- Use English for all output to the main agent.
 
 Return:
 
@@ -814,6 +849,7 @@ Constraints:
 - Do not modify files.
 - Do not implement the change.
 - Do not create the final implementation plan file.
+- Use English for all output to the main agent.
 
 Return the result as a strategy report that the main agent can synthesize into the final plan.
 ```
@@ -854,6 +890,8 @@ Constraints:
 - Do not modify files.
 - Do not implement the change.
 - Do not write the final implementation plan file.
+- The draft implementation plan may be written in Japanese.
+- Use English for all output to the main agent.
 
 Return:
 
@@ -872,6 +910,7 @@ Before finishing, verify that the plan:
 * is based on actual repository investigation
 * uses configured custom agent/subagent results when available
 * includes a complete Delegation Log
+* is written in Japanese unless the user explicitly requested another language
 * references the source material used
 * identifies concrete files to change
 * breaks work into clear phases
@@ -944,26 +983,26 @@ If a matching custom agent/subagent role is configured but the current environme
 
 Example `Delegation Log` entry:
 
-| Role | Delegated | Result Used | Notes |
+| 役割 | 委任 | 結果を使用 | メモ |
 | --- | --- | --- | --- |
-| `implementation-plan-context-researcher` | No | No | Fallback: the current environment did not expose a usable separate-agent mechanism. The main agent performed focused read-only investigation instead. |
+| `implementation-plan-context-researcher` | いいえ | いいえ | フォールバック: 現在の環境で利用可能な separate-agent 仕組みが公開されていなかったため、main agent が対象を絞った読み取り専用調査を実施した。 |
 
 ## Example Final Response
 
 ```markdown
-Created the implementation plan here:
+実装計画を作成しました:
 
 - `docs/agent-reports/plans/2026-06-10-add-xxx-implementation-plan.md`
 
-Summary:
+概要:
 
-- The plan proposes a small incremental change centered on `src/...`, with tests added under `tests/...`.
+- `src/...` を中心に小さく段階的に変更し、`tests/...` にテストを追加する計画です。
 
-Blocking open questions:
+ブロッキングな未解決質問:
 
-- Whether the new behavior should be enabled by default or behind an option.
+- 新しい挙動をデフォルトで有効にするか、オプション配下にするか。
 
-Recommended next step:
+推奨される次の手順:
 
-- Confirm the blocking question, then implement Phase 1 and Phase 2 from the plan.
+- ブロッキングな質問を確認してから、計画のフェーズ 1 とフェーズ 2 を実装する。
 ```

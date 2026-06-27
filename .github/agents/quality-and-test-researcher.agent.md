@@ -18,6 +18,11 @@ Summarize how the repository validates correctness and code quality.
 
 When the user asks about a specific feature, file, symbol, bug, or change, focus on the smallest relevant test scope and validation commands.
 
+## Language
+
+* Use English for all communication with the main agent, including delegated reports and handoff material.
+* Prefer English for private reasoning where possible, but do not expose private chain-of-thought.
+
 ## Investigate
 
 Focus on:

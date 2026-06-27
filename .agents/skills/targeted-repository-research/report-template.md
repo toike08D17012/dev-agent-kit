@@ -1,100 +1,103 @@
-# Targeted Repository Research Report
+# 対象リポジトリ調査レポート
 
-## 1. Research Topic
+## 1. 調査トピック
 
-| Item | Value |
+| 項目 | 値 |
 | --- | --- |
-| Topic | |
-| Research type | |
-| User question | |
-| Report path | |
-| Status | Draft / Verified / Needs follow-up |
+| トピック | |
+| 調査種別 | |
+| ユーザー質問 | |
+| レポートパス | |
+| ステータス | 下書き / 検証済み / 要追加対応 |
 
-## 2. Direct Conclusion
+## 2. 直接の結論
 
-State the most important conclusion first.
+最も重要な結論を先に記載する。
 
-## 3. Scope
+## 3. スコープ
 
-### Included
-
-* 
-
-### Excluded
+### 含むもの
 
 * 
 
-## 4. Relevant Files and Symbols
+### 含まないもの
 
-| Path | Symbol / Key / Command | Relevance |
+* 
+
+## 4. 関連ファイルとシンボル
+
+| パス | シンボル / キー / コマンド | 関連性 |
 | --- | --- | --- |
 | | | |
 
-## 5. Findings
+## 5. 調査結果
 
-### Finding 1
+### 調査結果 1
 
-**Conclusion:**  
-**Evidence:**  
-**Notes:**  
+**結論:**
 
-### Finding 2
+**根拠:**
 
-**Conclusion:**  
-**Evidence:**  
-**Notes:**  
+**メモ:**
 
-## 6. Behavior / Flow
+### 調査結果 2
 
-Use this section when the topic involves runtime behavior.
+**結論:**
 
-```text
-entrypoint / trigger
-  -> relevant component
-  -> relevant function / class
-  -> side effect / output
+**根拠:**
+
+**メモ:**
+
+## 6. 挙動 / フロー
+
+トピックが実行時の挙動に関わる場合に使う。
+
+```mermaid
+flowchart TD
+    A[エントリーポイント / トリガー] --> B[関連コンポーネント]
+    B --> C[関連関数 / クラス]
+    C --> D[副作用 / 出力]
 ```
 
-## 7. Impact Scope
+## 7. 影響範囲
 
-Use this section when the topic involves a potential change.
+トピックが潜在的な変更に関わる場合に使う。
 
-| Area | Impact | Risk | Files / Tests |
+| 領域 | 影響 | リスク | ファイル / テスト |
 | ---- | ------ | ---- | ------------- |
 |      |        |      |               |
 
-## 8. Relevant Tests and Validation
+## 8. 関連テストと検証
 
-| Purpose | Command or test | Source | Notes |
+| 目的 | コマンドまたはテスト | 出典 | メモ |
 | ------- | --------------- | ------ | ----- |
 |         |                 |        |       |
 
-## 9. Unknowns and Assumptions
+## 9. 不明点と前提
 
-| Type       | Item | Follow-up |
+| 種別       | 項目 | フォローアップ |
 | ---------- | ---- | --------- |
-| Assumption |      |           |
-| Unknown    |      |           |
+| 前提       |      |           |
+| 不明       |      |           |
 
-## 10. Recommended Next Actions
+## 10. 推奨される次の手順
 
 1.
 2.
 3.
 
-## 11. Evidence Log
+## 11. 根拠ログ
 
-| Evidence                   | Why it matters |
+| 根拠                       | 重要な理由 |
 | -------------------------- | -------------- |
 | `path/to/file`             |                |
 | `path/to/file:symbol_name` |                |
-| command result             |                |
+| コマンド結果               |                |
 
-## 12. Delegation Log
+## 12. 委任ログ
 
-Use this section only when delegation was required, attempted, or skipped due to
-environment limitations.
+委任が必須だった場合、試行された場合、または環境制約でスキップされた場合のみ使う。
 
-| Role | Delegated | Result Used | Notes |
+| 役割 | 委任 | 結果を使用 | メモ |
 | ---- | --------- | ----------- | ----- |
 | | | | |

@@ -30,6 +30,25 @@ For implementation planning, use this skill as a prerequisite when the current
 implementation is not already understood, then pass the research result to the
 implementation planning workflow.
 
+## Language Policy
+
+Final targeted research artifacts MUST be written in Japanese unless the user
+explicitly requests another language.
+
+This includes persistent reports under `docs/agent-reports/research/` and
+conversation-only final research answers. Keep code identifiers, file paths,
+commands, symbols, configuration keys, error messages, and quoted source text
+unchanged.
+
+Use English for all main-agent/subagent communication, including delegated prompts,
+intermediate investigation reports, review notes, and handoff material.
+
+The main agent MUST synthesize English delegated outputs into a Japanese final
+research artifact.
+
+Prefer English for private reasoning where possible, but do not expose private
+chain-of-thought.
+
 ## When to Use This Skill
 
 Use this skill when the user asks to investigate the current repository
@@ -302,15 +321,15 @@ not required.
 
 When a delegation log is included, use this structure:
 
-| Role                                 | Delegated | Result Used | Notes |
+| 役割                                 | 委任      | 結果を使用  | メモ  |
 | ------------------------------------ | --------- | ----------- | ----- |
-| `implementation-location-researcher` | Yes / No  | Yes / No    | ...   |
-| `symbol-trace-researcher`            | Yes / No  | Yes / No    | ...   |
-| `behavior-flow-researcher`           | Yes / No  | Yes / No    | ...   |
-| `impact-scope-researcher`            | Yes / No  | Yes / No    | ...   |
-| `bug-context-researcher`             | Yes / No  | Yes / No    | ...   |
-| `quality-and-test-researcher`        | Yes / No  | Yes / No    | ...   |
-| `project-config-researcher`          | Yes / No  | Yes / No    | ...   |
+| `implementation-location-researcher` | はい / いいえ | はい / いいえ | ... |
+| `symbol-trace-researcher`            | はい / いいえ | はい / いいえ | ... |
+| `behavior-flow-researcher`           | はい / いいえ | はい / いいえ | ... |
+| `impact-scope-researcher`            | はい / いいえ | はい / いいえ | ... |
+| `bug-context-researcher`             | はい / いいえ | はい / いいえ | ... |
+| `quality-and-test-researcher`        | はい / いいえ | はい / いいえ | ... |
+| `project-config-researcher`          | はい / いいえ | はい / いいえ | ... |
 
 If a role was not delegated because the investigation was routing-level only, state
 that clearly.
@@ -389,6 +408,8 @@ Ask delegated roles to return:
 * unknowns and risks
 * recommended next checks
 
+Delegated roles must write their returned reports in English.
+
 Do not ask delegated roles to make broad final conclusions outside their assigned
 scope.
 
@@ -420,6 +441,9 @@ Produce a concise answer with:
 * Unknowns and assumptions
 * Suggested next actions
 
+Write the final answer or persistent report in Japanese unless the user explicitly
+requests another language.
+
 For implementation or debugging tasks, include concrete next steps such as:
 
 * Files to edit
@@ -434,6 +458,8 @@ Synthesize delegated findings into one coherent answer.
 ## Output Style
 
 Use concise but useful Markdown.
+Write final research output in Japanese unless the user explicitly requests another
+language.
 
 Start with the answer, not the investigation log.
 
@@ -447,11 +473,11 @@ Every important claim should be grounded by at least one of:
 * Test name
 * Explicit uncertainty note
 
-Use labels where helpful:
+Use Japanese labels where helpful:
 
-* `Confirmed:` for facts grounded in files
-* `Inferred:` for reasonable conclusions
-* `Unknown:` for unresolved items
+* `確認済み:` for facts grounded in files
+* `推定:` for reasonable conclusions
+* `不明:` for unresolved items
 
 Prefer short sections over long narratives.
 
@@ -462,25 +488,25 @@ Avoid generic advice that is not grounded in repository evidence.
 When answering only in the conversation, use this structure when appropriate:
 
 ```markdown
-## Conclusion
+## 結論
 
 ...
 
-## Evidence
+## 根拠
 
 - `path/to/file.py`: ...
 - `path/to/test.py`: ...
 - `pyproject.toml`: ...
 
-## How It Works
+## 仕組み
 
 ...
 
-## Unknowns / Assumptions
+## 不明点 / 前提
 
 ...
 
-## Suggested Next Steps
+## 推奨される次の手順
 
 ...
 ```

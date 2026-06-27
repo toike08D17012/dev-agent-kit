@@ -1,113 +1,113 @@
-# Repository Overview Report
+# リポジトリ概要レポート
 
-## 1. Executive Summary
+## 1. エグゼクティブサマリー
 
-Briefly explain what this repository appears to do and what kind of project it is.
+このリポジトリが何をするものか、どのような種類のプロジェクトかを簡潔に説明する。
 
-## 2. Repository Purpose
+## 2. リポジトリの目的
 
-| Item | Summary |
+| 項目 | 概要 |
 | --- | --- |
-| Primary purpose | |
-| Main users | |
-| Main runtime / framework | |
-| Main language(s) | |
-| Package / application type | |
+| 主な目的 | |
+| 主な利用者 | |
+| 主なランタイム / フレームワーク | |
+| 主な言語 | |
+| パッケージ / アプリケーション種別 | |
 
-## 3. Repository Layout
+## 3. リポジトリ構成
 
-| Path | Role | Notes |
+| パス | 役割 | メモ |
 | --- | --- | --- |
 | `README.md` | | |
 | `src/` | | |
 | `tests/` | | |
 | `docs/` | | |
 
-## 4. Main Implementation Areas
+## 4. 主な実装領域
 
-Summarize the most important implementation areas.
+最も重要な実装領域を要約する。
 
-| Area | Key paths | Responsibility |
+| 領域 | 主要パス | 責務 |
 | --- | --- | --- |
 | | | |
 
-## 5. Runtime / Execution Flow
+## 5. ランタイム / 実行フロー
 
-Describe the high-level flow from entrypoint to main behavior.
+エントリーポイントから主な挙動までの大まかな流れを説明する。
 
-```text
-entrypoint
-  -> configuration loading
-  -> main components
-  -> output / side effects
-````
+```mermaid
+flowchart TD
+    A[エントリーポイント] --> B[設定読み込み]
+    B --> C[主要コンポーネント]
+    C --> D[出力 / 副作用]
+```
 
-## 6. Configuration and Tooling
+## 6. 設定とツール
 
-| Purpose               | Source of truth | Notes |
+| 目的                  | 信頼できる情報源 | メモ |
 | --------------------- | --------------- | ----- |
-| Dependencies          |                 |       |
-| Build                 |                 |       |
-| Run                   |                 |       |
-| Test                  |                 |       |
-| Lint                  |                 |       |
-| Format                |                 |       |
-| Type check            |                 |       |
+| 依存関係              |                 |       |
+| ビルド                |                 |       |
+| 実行                  |                 |       |
+| テスト                |                 |       |
+| lint                  |                 |       |
+| フォーマット          |                 |       |
+| 型チェック            |                 |       |
 | CI                    |                 |       |
 | Docker / devcontainer |                 |       |
 
-## 7. Important Commands
+## 7. 重要なコマンド
 
-| Purpose                  | Command | Source | Notes |
+| 目的                       | コマンド | 出典 | メモ |
 | ------------------------ | ------- | ------ | ----- |
-| Install dependencies     |         |        |       |
-| Run tests                |         |        |       |
-| Run lint                 |         |        |       |
-| Run formatter            |         |        |       |
-| Run type check           |         |        |       |
-| Build package / artifact |         |        |       |
+| 依存関係のインストール    |         |        |       |
+| テスト実行                |         |        |       |
+| lint 実行                 |         |        |       |
+| フォーマッター実行        |         |        |       |
+| 型チェック実行            |         |        |       |
+| パッケージ / 成果物ビルド |         |        |       |
 
-## 8. Testing and Quality Strategy
+## 8. テストと品質戦略
 
-Summarize:
+次を要約する:
 
-* Test framework
-* Test directory structure
-* Fixture or helper patterns
-* CI validation
-* Missing or unclear test areas
+* テストフレームワーク
+* テストディレクトリ構成
+* fixture または helper のパターン
+* CI 検証
+* 不足または不明なテスト領域
 
-## 9. Documentation Status
+## 9. ドキュメントの状態
 
-Summarize:
+次を要約する:
 
-* README accuracy
-* Setup instructions
-* Usage examples
-* Development instructions
-* Stale or missing documentation
+* README の正確性
+* セットアップ手順
+* 使用例
+* 開発手順
+* 古い、または不足しているドキュメント
 
-## 10. Risks and Unknowns
+## 10. リスクと不明点
 
-| Type    | Item | Impact | Suggested follow-up |
+| 種別    | 項目 | 影響 | 推奨フォローアップ |
 | ------- | ---- | ------ | ------------------- |
-| Unknown |      |        |                     |
-| Risk    |      |        |                     |
+| 不明    |      |        |                     |
+| リスク  |      |        |                     |
 
-## 11. Recommended Next Actions
+## 11. 推奨される次の手順
 
-List concrete next actions for future coding agents or maintainers.
+今後の coding agent またはメンテナーに向けて、具体的な次の手順を列挙する。
 
 1.
 2.
 3.
 
-## 12. Evidence
+## 12. 根拠
 
-Record important evidence.
+重要な根拠を記録する。
 
-| Evidence                   | Why it matters |
+| 根拠                       | 重要な理由 |
 | -------------------------- | -------------- |
 | `path/to/file`             |                |
 | `path/to/file:symbol_name` |                |
-| command result             |                |
+| コマンド結果               |                |

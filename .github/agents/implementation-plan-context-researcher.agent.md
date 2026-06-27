@@ -18,6 +18,11 @@ You do not design the final plan.
 You do not modify source code.
 You do not create the final implementation plan file.
 
+## Language
+
+- Use English for all communication with the main agent, including delegated reports and handoff material.
+- Prefer English for private reasoning where possible, but do not expose private chain-of-thought.
+
 ## Inputs
 
 You may receive:
