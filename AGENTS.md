@@ -75,7 +75,9 @@ If checks cannot be run, explain why. In the final response, state which checks 
 ## 9. Language Policy
 
 - Use Japanese for user-facing communication, including progress updates and final responses, unless otherwise requested.
-- Use English for repository-facing and agent-facing text, including code comments, docstrings, test names, commit messages, implementation plans, research reports, investigation notes, TODO lists, checklists, and handoff notes.
+- Write final plan, research, and repository-overview artifacts in Japanese unless the user explicitly requests another language. This includes files under `docs/agent-reports/plans/`, files under `docs/agent-reports/research/`, and `docs/agent-reports/repository-overview.md`.
+- Use English for repository-facing and agent-facing text that is not a final artifact, including code comments, docstrings, test names, commit messages, agent instructions, skill instructions, subagent prompts and responses, investigation notes, TODO lists, checklists, and handoff notes.
+- Use English for all main-agent/subagent communication, including delegated prompts, intermediate reports, review notes, and handoff material.
 - Follow the existing language style of user-facing documentation.
 - Keep agent-facing notes concise and avoid repeating instructions already defined in this file or in language-specific instruction files.
-- Do not expose private chain-of-thought. When explaining decisions, provide a concise Japanese summary of the rationale, evidence, changes made, and validation results.
+- Prefer English for private reasoning where possible. Do not expose private chain-of-thought. When explaining decisions, provide a concise Japanese summary of the rationale, evidence, changes made, and validation results.
