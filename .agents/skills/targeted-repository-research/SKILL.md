@@ -507,6 +507,6 @@ identify:
 
 If creating a persistent report, make sure it is saved under:
 
-* `docs/agent-reports/targeted-research/<topic-slug>.md`
+* `docs/agent-reports/research/<topic-slug>.md`
 
 Persistent reports must follow `report-template.md` when it exists.
