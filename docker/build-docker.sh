@@ -6,7 +6,7 @@ cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
 export USER_NAME="${USER_NAME:-kujira}"
 export GROUP_NAME="${GROUP_NAME:-$USER_NAME}"
 
-CONTEXT=".."   # レポジトリルート
+CONTEXT=".." # レポジトリルート
 REPO_NAME="$(basename "$(cd "${CONTEXT}" && pwd)")"
 export REPO_NAME
 

@@ -27,6 +27,11 @@ main() {
         exit 0
     fi
 
+    local -a command=(bash)
+    if [[ "$#" -gt 0 ]]; then
+        command=("$@")
+    fi
+
     local service_name="app"
     local -a profile_args=()
 
@@ -44,11 +49,21 @@ main() {
         touch .bash_history
     fi
 
-    docker compose "${profile_args[@]}" run \
-        --rm \
-        -e "NEW_UID=$(id -u)" \
-        -e "NEW_GID=$(id -g)" \
-        "${service_name}" "${@:-bash}"
+    local -a docker_compose_cmd=(docker compose)
+    if [[ "${#profile_args[@]}" -gt 0 ]]; then
+        docker_compose_cmd+=("${profile_args[@]}")
+    fi
+
+    docker_compose_cmd+=(
+        run
+        --rm
+        -e "NEW_UID=$(id -u)"
+        -e "NEW_GID=$(id -g)"
+        "${service_name}"
+        "${command[@]}"
+    )
+
+    "${docker_compose_cmd[@]}"
 }
 
 main "$@"
