@@ -47,7 +47,8 @@ Look for:
 - existing behavior
 - existing tests
 - existing conventions and architecture patterns
-- validation commands
+- the smallest validation commands that directly cover the likely changes
+- conditions that would justify broader validation, such as shared APIs, configuration, or cross-module effects
 - risks, constraints, and compatibility concerns
 - gaps in the existing investigation
 
@@ -91,7 +92,8 @@ Return a concise markdown report with this structure:
 
 ## Existing Tests and Validation
 
-- ...
+- <Relevant tests and the smallest useful commands.>
+- <Conditions that would require broader checks.>
 
 ## Relevant Conventions
 
@@ -108,3 +110,4 @@ Return a concise markdown report with this structure:
 ## Suggested Planning Inputs
 
 <Concrete facts that the main agent should use when creating the implementation plan.>
+```

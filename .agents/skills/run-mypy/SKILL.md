@@ -24,6 +24,8 @@ Always run mypy through the repository wrapper script:
 ./scripts/pre-commit/mypy.sh [MYPY_ARGS ...]
 ```
 
+Preserve every target and option supplied by the user. Do not silently replace or broaden the requested scope.
+
 This wrapper handles both cases:
 
 * when called from the local host environment, it runs mypy through `./docker/run-docker.sh`
@@ -89,7 +91,9 @@ If mypy fails:
    * a missing dependency or environment issue
    * a config/target path issue
 4. Prefer the smallest focused fix.
-5. Re-run the same wrapper command after applying a fix.
+5. After a fix, re-run the smallest failing file or package that can confirm the result without changing mypy's configured semantics.
+6. Expand back to the user-requested scope when needed to establish the requested result, or when the fix affects shared types, imports, configuration, or multiple packages.
+7. Stop after a successful check. Do not repeat it unless relevant files or mypy configuration change afterward.
 
 ## Do not do this
 

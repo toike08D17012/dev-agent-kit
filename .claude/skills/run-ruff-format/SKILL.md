@@ -24,7 +24,9 @@ Always run Ruff format through the repository wrapper script:
 ./scripts/pre-commit/ruff-format.sh [RUFF_FORMAT_ARGS ...]
 ```
 
-By default, run Ruff format in modifying mode:
+Preserve every target and option supplied by the user. Do not silently replace or broaden the requested scope.
+
+When the user provides no target or options, run Ruff format in modifying mode:
 
 ```bash
 ./scripts/pre-commit/ruff-format.sh .
@@ -89,21 +91,21 @@ When working on Python code:
 
 1. Make the requested code changes.
 
-2. Run Ruff format:
+2. Run Ruff format against the user-specified target. When no scope was specified, use the no-argument behavior defined in the core rule:
 
    ```bash
    ./scripts/pre-commit/ruff-format.sh .
    ```
 
-3. Run Ruff check with fixes:
+3. Run Ruff check only when the user requested lint validation or the surrounding Python workflow requires it:
 
    ```bash
-   ./scripts/pre-commit/ruff-check.sh --fix .
+   ./scripts/pre-commit/ruff-check.sh --fix <target>
    ```
 
-4. Re-run Ruff format if Ruff check changed imports or code layout.
+4. Re-run Ruff format only if Ruff check or a manual fix changed Python code after formatting.
 
-5. Continue until both commands produce no additional changes.
+5. Stop after the required checks pass. Do not repeat a successful format check unless relevant files or Ruff configuration change afterward.
 
 ## Error handling
 
@@ -117,7 +119,7 @@ If Ruff format fails:
    * an unsupported file
    * an environment/configuration issue
 4. Prefer the smallest focused fix.
-5. Re-run the same wrapper command after applying a fix.
+5. Re-run the smallest target that confirms the fix, while retaining any user-specified options.
 
 ## Do not do this
 

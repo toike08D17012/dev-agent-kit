@@ -44,13 +44,17 @@ Check whether the plan:
 - identifies concrete files to change
 - separates confirmed facts, assumptions, and open questions
 - marks blocking questions clearly
-- uses a small and incremental approach
-- includes implementation phases
+- uses the simplest design that satisfies confirmed requirements
+- avoids speculative abstractions, extension points, and files without a distinct responsibility
+- separates files by cohesive responsibility rather than arbitrary size limits
+- uses ordered steps without forcing fixed phases onto a small change
 - includes file-level changes
-- includes automated validation commands
-- includes manual verification when needed
+- maps each validation command to a changed area or risk
+- starts with the smallest sufficient validation and gives a reason for any broader check
+- avoids repeating successful checks without intervening relevant changes
+- includes manual verification only when automated checks are insufficient
 - includes risks and mitigations
-- includes rollback plan
+- includes detailed rollback guidance only when reverting the diff is insufficient
 - includes done criteria
 - avoids implementing changes during planning
 - avoids unrelated refactoring
@@ -86,3 +90,4 @@ Pass / Needs revision
 ## Final Recommendation
 
 - Ready to finalize / revise before finalizing
+```

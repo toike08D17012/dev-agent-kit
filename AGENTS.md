@@ -32,7 +32,12 @@ Do not edit instruction files unless explicitly requested.
 
 - Inspect relevant files before editing.
 - Prefer existing patterns, utilities, naming, and architecture.
-- Keep changes minimal and focused.
+- Implement the simplest design that satisfies confirmed requirements.
+- Do not add abstractions, extension points, configuration, or defensive branches for hypothetical future needs.
+- Prefer direct control flow and existing utilities. Introduce a new abstraction only when it represents a distinct responsibility or removes concrete repetition without hiding behavior.
+- Keep changes, changed files, and public surface area minimal and focused.
+- Split files by cohesive responsibility when extraction makes the code easier to understand and review. Do not split files to meet arbitrary line or function counts.
+- Validate external inputs and required invariants at clear boundaries. Do not repeat equivalent checks across trusted internal layers without a specific failure mode.
 - Preserve public APIs unless a breaking change is explicitly requested.
 - Do not make unrelated refactors, file moves, or formatting-only changes.
 - Do not weaken lint, type-check, test, CI, or test coverage to make checks pass.
@@ -55,16 +60,18 @@ If a task includes both Markdown changes and non-Markdown repository changes, ap
 
 ## 7. Validation
 
-After editing, run relevant checks when possible.
-Use narrower checks for Markdown-only or otherwise scoped changes when appropriate.
+After editing, run the smallest checks that directly cover the changed behavior and files.
+Match validation effort to the change's scope and failure risk, and state why the selected checks are sufficient.
 
-Default validation command:
+Expand to broader checks when the change affects shared APIs, multiple modules, project configuration, build or distribution behavior, security-sensitive code, or another high-risk boundary. The repository-wide check remains available for broad or high-risk changes:
 
 ```bash
 ./scripts/pre-commit/checks.sh
 ```
 
-If checks cannot be run, explain why. In the final response, state which checks were run or skipped.
+Do not repeat an identical successful check unless relevant files or configuration changed afterward, or the earlier run did not cover the final state.
+
+If checks cannot be run or are not relevant, explain why. In the final response, state which checks were run and which relevant checks were skipped.
 
 ## 8. Security and Secrets
 
