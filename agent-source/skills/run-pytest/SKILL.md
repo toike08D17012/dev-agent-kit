@@ -25,6 +25,8 @@ Always run pytest through the repository wrapper script:
 ./scripts/pre-commit/pytest.sh [PYTEST_ARGS ...]
 ```
 
+Preserve every target and option supplied by the user. Do not silently replace or broaden the requested scope.
+
 This wrapper handles both cases:
 
 * when called from the local host environment, it runs pytest through `./docker/run-docker.sh`
@@ -118,7 +120,9 @@ If pytest fails:
    * a fixture/setup issue
    * an import/path/configuration issue
 5. Prefer the smallest focused fix.
-6. Re-run the same wrapper command after applying a fix.
+6. After a fix, re-run the last failing test node or smallest failing test file first.
+7. Expand back to the user-requested scope when needed to establish the requested result, or when the fix affects shared fixtures, public behavior, configuration, or multiple modules.
+8. Stop after the required scope passes. Do not repeat a successful test command unless relevant code, tests, fixtures, or configuration change afterward.
 
 ## Do not do this
 

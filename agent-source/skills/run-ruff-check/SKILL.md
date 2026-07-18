@@ -24,7 +24,9 @@ Always run Ruff check through the repository wrapper script:
 ./scripts/pre-commit/ruff-check.sh [RUFF_CHECK_ARGS ...]
 ```
 
-By default, prefer running Ruff with automatic fixes enabled:
+Preserve every target and option supplied by the user. Do not silently replace or broaden the requested scope.
+
+When the user provides no target or options, prefer running Ruff with automatic fixes enabled:
 
 ```bash
 ./scripts/pre-commit/ruff-check.sh --fix .
@@ -95,7 +97,7 @@ When working on Python code:
 
 1. Make the requested code changes.
 
-2. Run Ruff check with safe fixes:
+2. Run Ruff check against the user-specified target. When no scope was specified, use the no-argument behavior defined in the core rule:
 
    ```bash
    ./scripts/pre-commit/ruff-check.sh --fix .
@@ -105,7 +107,11 @@ When working on Python code:
 
 4. Fix remaining issues manually when needed.
 
-5. Re-run the same command until Ruff check passes.
+5. After a fix, re-run the smallest failing file or directory that can confirm the result.
+
+6. Expand back to the user-requested scope when needed to establish the requested result, or when fixes affect shared imports, configuration, or multiple packages.
+
+7. Stop after a successful check. Do not repeat it unless relevant files or Ruff configuration change afterward.
 
 ## Error handling
 
@@ -121,7 +127,7 @@ If Ruff check fails:
    * an unused variable/import issue
    * a formatting-related issue that should be handled by `ruff format`
 4. Prefer the smallest focused fix.
-5. Re-run the same wrapper command after applying a fix.
+5. Re-run the smallest target that confirms the fix, then restore the user-requested scope when required.
 
 ## Do not do this
 
