@@ -76,3 +76,6 @@ logs/
 
 # === Docker related files ===
 docker/.bash_history
+
+# === Agent output files ===
+docs/agent-reports/
