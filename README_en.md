@@ -1,143 +1,125 @@
 ---
-title: Python Workspace Template
-description: Python development template with Dev Container, uv, Ruff, and Mypy
+title: Dev Agent Kit
+description: Manage shared instructions, Skills, and Agents for Coding Agents and distribute them to repositories
 ---
 
-# Python Workspace Template
+# Dev Agent Kit
 
 [日本語](README.md) | English
 
-A template repository for Python projects. It provides a development environment based on Dev Container and `uv`, wrappers for Ruff, Mypy, and pytest, and shared Coding Agent assets for GitHub Copilot, Codex, and Claude Code.
+A repository for managing shared instructions, Skills, and Agents for Coding Agents. A CLI distributes the files in `agent-source/` to your repositories so GitHub Copilot, Codex, and Claude Code can use common development policies and workflows.
 
-## 1. Initial customization
+## 1. What this repository manages
 
-When creating a project from this template, update these items first:
+| Type | Contents | Source |
+| --- | --- | --- |
+| Shared instructions | Development principles, plan approval, validation scope, and language policies | [agent-source/instructions/AGENTS.md](agent-source/instructions/AGENTS.md) |
+| Language-specific instructions | Editing rules for Python, Markdown, and Shell | [agent-source/instructions/](agent-source/instructions/) |
+| Skills | Procedures for repository research, implementation planning, and quality checks | [agent-source/skills/](agent-source/skills/) |
+| Agents | Specialists for architecture, implementation location, bugs, change impact, and plan review | [agent-source/agents/](agent-source/agents/) |
 
-- The project description in `README.md` and `README_en.md`
-- The directory name `src/python_workspace_template/` (for example, `src/<repository_name>/`)
-- `image`, `volumes`, and `working_dir` in `docker/docker-compose.yml`
-- `name` and `workspaceFolder` in `.devcontainer/devcontainer.json`
+Shared content is maintained in the source files. The CLI adapts output paths and Agent definition formats for each tool. Claude Code-specific instructions are maintained in [agent-source/instructions/CLAUDE.md](agent-source/instructions/CLAUDE.md).
 
-## 2. Features
+## 2. Add assets to a repository
 
-- **Dependency management:** `uv`
-- **Development environment:** VS Code Dev Container
-- **Lint / formatting:** Ruff
-- **Type checking:** Mypy
-- **Testing:** pytest
-- **Machine learning:** Dynamic PyTorch installation configuration for CPU / CUDA
-- **Coding Agents:** A CLI that distributes shared instructions, Skills, and Agents to host-specific locations
-
-## 3. Getting started
-
-### 3.1 Distribute Coding Agent assets
-
-Expand the shared files in `agent-source/` into a target repository:
+Check out this repository and run the following from its root with `uv` and Python 3.14 or later available:
 
 ```bash
+uv sync
 uv run dev-agent-kit --target-dir /path/to/repository
 ```
 
-By default, the command generates files for GitHub Copilot, Codex, and Claude Code. It fails if an existing destination file has different contents. Use `--force` only when you intend to overwrite those generated files.
+By default, the command generates files for GitHub Copilot, Codex, and Claude Code. If `--target-dir` is omitted, files are distributed to the current directory.
+
+### Output paths
+
+Paths below are relative to the target repository root.
+
+| Target | Output paths |
+| --- | --- |
+| Always generated | `AGENTS.md`, `.agents/instructions/*.md` |
+| GitHub Copilot or Codex enabled | `.agents/skills/` |
+| GitHub Copilot | `.github/agents/*.agent.md` |
+| Codex | `.codex/agents/*.toml` |
+| Claude Code | `.claude/CLAUDE.md`, `.claude/skills/`, `.claude/agents/*.md` |
+
+`.claude/CLAUDE.md` references the root `AGENTS.md`. The command does not generate `.github/copilot-instructions.md` or `.github/skills/`.
+
+### Select target tools
+
+Use `--disable-copilot`, `--disable-codex`, or `--disable-claude-code` to disable output for an individual tool. For example, to generate only Codex assets:
+
+```bash
+uv run dev-agent-kit --target-dir /path/to/repository --disable-copilot --disable-claude-code
+```
+
+`AGENTS.md` and `.agents/instructions/*.md` are generated even when all tools are disabled. To use a different source directory, pass `--source-dir /path/to/agent-source`. The default source is `./agent-source`.
+
+### Update existing files
+
+Existing files with identical contents are left as they are. Files with different contents cause an error. Review the differences and use `--force` only when you intend to overwrite them.
 
 ```bash
 uv run dev-agent-kit --target-dir /path/to/repository --force
 ```
 
-Use `--disable-copilot`, `--disable-codex`, or `--disable-claude-code` to disable an individual target. `AGENTS.md` and `.agents/instructions/*.md` are always generated. When GitHub Copilot or Codex is enabled, `.agents/skills/` is generated as well. The command does not generate `.github/copilot-instructions.md` or `.github/skills/`.
+Files are written one at a time, so an error can leave earlier outputs in place. Files removed from the source and existing files for disabled tools are not automatically deleted.
 
-### 3.2 Start the Dev Container
+## 3. Maintain instructions, Skills, and Agents
 
-Open the repository in VS Code and start the container using the Dev Containers extension. `postCreateCommand` runs `uv sync` to set up the development environment.
+To update shared policies or workflows, edit the relevant files in `agent-source/` and redistribute them to target repositories with the CLI. Supporting files such as Skill templates are distributed as well.
 
-### 3.3 Add dependencies
-
-```bash
-uv add <package_name>
-```
-
-## 4. Quality checks
-
-Use the wrappers in `scripts/pre-commit/` for project validation. **Use read-only options when checking status, and apply automatic fixes only when changes are intended.** For a localized change, begin with the affected files or relevant tests; expand the scope only when needed.
-
-### 4.1 Verification only (no automatic source edits)
+To apply changes to this repository itself, review the differences and run:
 
 ```bash
-./scripts/pre-commit/ruff-check.sh .
-./scripts/pre-commit/ruff-format.sh --check .
-./scripts/pre-commit/mypy.sh .
-./scripts/pre-commit/pytest.sh
+uv run dev-agent-kit --target-dir . --force
 ```
 
-These are examples of project-wide checks. For routine small changes, pass a specific file, directory, or test node to the relevant wrapper. Once the necessary checks succeed, there is no need to repeat them unless related files or configuration change.
+Edits made directly to generated files in a target repository do not update the source. A later run with `--force` can overwrite those edits, so maintain changes you want to keep sharing in the source files.
 
-`pytest.sh` treats pytest exit code `5` (no tests collected) as a successful wrapper exit. This does **not** mean the tests passed: no tests were executed.
-
-### 4.2 Explicit automatic fixes and formatting
-
-```bash
-# Apply lint fixes to a focused target
-./scripts/pre-commit/ruff-check.sh --fix src/package/module.py
-
-# Format a focused target
-./scripts/pre-commit/ruff-format.sh src/package/module.py
-```
-
-Do not add `--fix` or run a writing formatter for a verification-only request. Use Ruff's `--unsafe-fixes` only with explicit authorization.
-
-The wrappers are designed to use `./docker/run-docker.sh` when called from the host, and the current environment when called inside the Dev Container / project container. **They do not silently fall back to Python tools installed on the host.** Do not wrap the dedicated scripts in another Docker wrapper call.
-
-## 5. Run arbitrary commands in Docker
-
-`docker/docker-compose.yml` is a single Compose file with GPU configuration under the `gpu` profile. `docker/run-docker.sh` checks `nvidia-smi` and selects the `app-gpu` service when an NVIDIA GPU is available, or `app` otherwise. Let the wrapper handle CPU/GPU selection and UID/GID mapping.
-
-```bash
-# Start the default shell
-./docker/run-docker.sh
-
-# Run a project command
-./docker/run-docker.sh python -m package.module
-```
-
-For normal use, prefer the wrapper over direct `docker compose run ...` commands. For tests, lint, and type checking, prefer the dedicated wrappers in the preceding section.
-
-## 6. Switch the Docker base image
-
-The default base image is `ubuntu:24.04`. For GPU / ML workloads, replace the first line of `docker/Dockerfile`:
-
-```dockerfile
-# Default
-FROM ubuntu:24.04
-
-# CUDA-capable example (use instead of the default)
-FROM nvidia/cuda:13.0.2-cudnn-runtime-ubuntu24.04
-```
-
-## 7. Coding Agent workflow
-
-When the distributed Skills are installed, their responsibilities are separated to avoid duplicate research and excessive verification.
+### Main Skills
 
 | Skill | Responsibility |
 | --- | --- |
-| `repository-overview` | Create a repository map and refresh it when relevant changes occur |
+| `repository-overview` | Create and update a repository map |
 | `targeted-repository-research` | Investigate a specific feature or change impact within the necessary scope |
-| `implementation-plan` | Document an implementation approach and a minimal validation plan |
-| `run-in-docker` | Run arbitrary project commands through the Docker wrapper |
+| `implementation-plan` | Document an implementation approach and validation plan |
+| `run-in-docker` | Run project commands through the Docker wrapper |
 | `run-ruff-check` / `run-ruff-format` | Verify lint/formatting or apply authorized automatic changes |
 | `run-mypy` / `run-pytest` | Run type checks and tests through dedicated wrappers |
 
-For code changes, the intended workflow is to reuse existing research, have a human review the plan before implementation, and run the checks justified by that plan. Each Skill should stop after the required scope passes rather than repeating project-wide validation without a reason.
+The distributed instructions encourage reusing existing research, obtaining human approval of an implementation plan for non-trivial code or configuration changes, and validating the scope justified by the change.
 
-## 8. Main directories
+The `run-*` Skills reference `scripts/pre-commit/` and `docker/run-docker.sh` in the target repository. The CLI does not distribute these scripts or the development environment. Provide the scripts or adapt the Skill procedures to the target project's setup.
+
+## 4. Develop and validate this repository
+
+The distribution CLI is implemented in Python, with dependencies managed by `uv`. VS Code Dev Container and Docker configuration are also included.
+
+### Quality checks
+
+Use the dedicated wrappers in `scripts/pre-commit/`, starting with files or tests relevant to the change.
+
+```bash
+./scripts/pre-commit/pytest.sh tests/test_agent_distribution.py
+./scripts/pre-commit/ruff-check.sh src/dev_agent_kit tests
+./scripts/pre-commit/ruff-format.sh --check src/dev_agent_kit tests
+./scripts/pre-commit/mypy.sh src/dev_agent_kit
+```
+
+Use read-only options for verification. Apply Ruff's `--fix` or a writing formatter only when automatic changes are intended, keeping the target scope focused.
+
+The wrappers use Docker when called from the host and the current environment inside the Dev Container / project container. They do not silently fall back to Python tools installed on the host. Do not wrap the dedicated scripts in another Docker wrapper call.
+
+`pytest.sh` treats exit code `5` (no tests collected) as a successful wrapper exit, but no tests were executed in that case.
+
+### Main directories
 
 | Path | Purpose |
 | --- | --- |
-| `agent-source/` | Source of shared Coding Agent assets |
-| `AGENTS.md` | Generated shared Coding Agent guidelines |
-| `.agents/instructions/` | Generated language-specific and task-specific instructions |
-| `.agents/skills/` | Generated Skills when the relevant hosts are enabled |
-| `.devcontainer/` | VS Code Dev Container configuration |
-| `docker/` | Dockerfile, Compose, and command wrapper |
+| `agent-source/` | Source instructions, Skills, and Agents |
+| `src/dev_agent_kit/` | Distribution CLI and tool-specific output logic |
+| `tests/` | Tests for distribution and other behavior |
+| `.agents/`, `.github/agents/`, `.codex/agents/`, `.claude/` | Distributed assets used in this repository |
 | `scripts/pre-commit/` | Quality-check wrappers |
-| `src/` | Python source code |
-| `tests/` | Tests |
+| `.devcontainer/`, `docker/` | Development environment for this repository |
