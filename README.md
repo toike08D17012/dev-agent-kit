@@ -1,121 +1,143 @@
 ---
-title: dev-agent-kit
-description: Modern Python development environment with Dev Container, uv, Ruff, and Mypy
+title: Python Workspace Template
+description: Dev Container、uv、Ruff、Mypy を備えた Python 開発環境テンプレート
 ---
 
-## Python Workspace Template
+# Python Workspace Template
 
-[English Versions](README_en.md) | 日本語
+日本語 | [English](README_en.md)
 
-Pythonプロジェクト開発用のテンプレートリポジトリです。
-Dev Container、uv、Ruff、Mypyを用いたモダンな開発環境を提供します。
+Python プロジェクト向けのテンプレートリポジトリです。Dev Container と `uv` による開発環境に加え、Ruff・Mypy・pytest の実行ラッパーと、GitHub Copilot / Codex / Claude Code 向けの共通 Coding Agent 設定を提供します。
 
-## テンプレート利用時の初期設定
+## 1. 新規プロジェクトでの初期設定
 
-このテンプレートを新規プロジェクトとして使う場合は、最初に以下を更新してください。
+このテンプレートからプロジェクトを作成したら、まず以下を変更してください。
 
 - `README.md` / `README_en.md` のプロジェクト説明
-- `src/python_workspace_template` のディレクトリ名（例: `src/<repository_name>`）
-- `docker/docker-compose.yml` の `image` / `volumes` / `working_dir`
-- `.devcontainer/devcontainer.json` の `name` / `workspaceFolder`
+- `src/python_workspace_template/` のディレクトリ名（例: `src/<repository_name>/`）
+- `docker/docker-compose.yml` の `image`、`volumes`、`working_dir`
+- `.devcontainer/devcontainer.json` の `name`、`workspaceFolder`
 
-## 機能・特徴
+## 2. 主な機能
 
-- **パッケージ管理**: `uv` を使用した高速な依存関係解決
-- **開発環境**: Dev Container (`.devcontainer`) による一貫した環境
-- **静的解析・フォーマット**: `ruff` による高速なLint/Format
-- **型チェック**: `mypy` による静的型チェック
-- **機械学習対応**: PyTorch (CPU/CUDA) の動的なインストール設定済み
+- **依存関係管理:** `uv`
+- **開発環境:** VS Code Dev Container
+- **Lint / フォーマット:** Ruff
+- **型チェック:** Mypy
+- **テスト:** pytest
+- **機械学習:** CPU / CUDA 用 PyTorch の動的インストール設定
+- **Coding Agent:** 共通の指示・Skills・Agents をホスト別の配置先に配布する CLI
 
-## 使い方
+## 3. 使い始める
 
-### 0. Coding agent asset の配布
+### 3.1 Coding Agent 用ファイルの配布
 
-`agent-source/` にある共通の instructions、skills、agents は、以下の CLI で各 coding agent 用の配置に展開できます。
+`agent-source/` に置いた共通ファイルを、対象リポジトリに展開します。
 
 ```bash
 uv run dev-agent-kit --target-dir /path/to/repository
 ```
 
-デフォルトでは GitHub Copilot、Codex、Claude Code 向けのファイルをすべて生成します。既存ファイルの内容が異なる場合は失敗し、上書きするには `--force` を指定します。
-root の `AGENTS.md` と `.agents/instructions/*.md` は常に生成されます。GitHub Copilot または Codex が有効な場合は `.agents/skills/` も生成します。`.github/copilot-instructions.md` と `.github/skills/` は生成しません。
+既定では GitHub Copilot、Codex、Claude Code 向けのファイルを生成します。既存の出力先に異なる内容のファイルがある場合は失敗するため、上書きが必要な場合だけ `--force` を指定してください。
 
 ```bash
 uv run dev-agent-kit --target-dir /path/to/repository --force
 ```
 
-個別のホスト固有出力は `--disable-copilot`、`--disable-codex`、`--disable-claude-code` で無効化できます。これらのフラグは常時生成される `AGENTS.md` と `.agents/instructions/*.md` には影響しません。
+`--disable-copilot`、`--disable-codex`、`--disable-claude-code` で各出力先を無効にできます。`AGENTS.md` と `.agents/instructions/*.md` は常に生成され、GitHub Copilot または Codex が有効な場合は `.agents/skills/` も生成されます。`.github/copilot-instructions.md` と `.github/skills/` は生成しません。
 
-### 1. Dev Container の起動
+### 3.2 Dev Container の起動
 
-VS Code で本リポジトリを開き、推奨される拡張機能「Dev Containers」を使用してコンテナを起動してください。
-`postCreateCommand` により、自動的に `uv sync` が実行され、環境がセットアップされます。
+VS Code でリポジトリを開き、Dev Containers 拡張機能からコンテナを起動します。`postCreateCommand` が `uv sync` を実行して開発環境をセットアップします。
 
-### 2. 依存関係の追加
-
-パッケージを追加する場合は `uv` を使用します。
+### 3.3 依存関係の追加
 
 ```bash
 uv add <package_name>
 ```
 
-### 3. 品質管理コマンド
+## 4. 品質チェック
 
-本プロジェクトでは `AGENTS.md` に基づき、以下の wrapper スクリプト経由での品質チェックを推奨しています。
+プロジェクトの検証には `scripts/pre-commit/` 配下のラッパーを使用します。**確認だけの場合は読み取り専用のオプションを使い、自動修正は必要なときだけ実行します。** 変更箇所が明らかな場合は、対象ファイルや関連テストに絞ってから必要に応じて範囲を広げてください。
+
+### 4.1 確認のみ（ソースを自動修正しない）
 
 ```bash
-# フォーマット、Lint自動修正、型チェック、テストを一括実行
-./scripts/pre-commit/ruff-format.sh && \
-./scripts/pre-commit/ruff-check.sh --fix && \
-./scripts/pre-commit/mypy.sh . && \
+./scripts/pre-commit/ruff-check.sh .
+./scripts/pre-commit/ruff-format.sh --check .
+./scripts/pre-commit/mypy.sh .
 ./scripts/pre-commit/pytest.sh
 ```
 
-各 wrapper は内部で `./docker/run-docker.sh` を使って実行されます。
-このテンプレートではローカルフォールバックを行わず、`docker` 実行を必須とします。
+上記は全体確認の例です。日常の小さな変更では、各ラッパーに対象ファイル・ディレクトリ・テストノードを指定できます。コマンドの成功を確認したら、関連ファイルや設定を変更しない限り同じチェックを繰り返す必要はありません。
 
-pytest は追加オプションもそのまま渡せます。
+`pytest.sh` は pytest の終了コード `5`（テスト未収集）を成功として扱います。ただし、この場合は**テストが通過したのではなく、テストが実行されなかった**ことに注意してください。
+
+### 4.2 明示的に自動修正・整形する場合
 
 ```bash
-# 例: 追加オプションつきで実行
-./scripts/pre-commit/pytest.sh -q -k smoke
+# 対象に絞って lint の自動修正
+./scripts/pre-commit/ruff-check.sh --fix src/package/module.py
+
+# 対象に絞ってフォーマット
+./scripts/pre-commit/ruff-format.sh src/package/module.py
 ```
 
-### 4. Docker 実行（CPU/GPU 自動切り替え）
+確認だけの依頼では `--fix` や書き込みを伴うフォーマットを実行しません。Ruff の `--unsafe-fixes` は明示的に許可された場合のみ使用します。
 
-`docker/docker-compose.yml` は 1 ファイルに統合されており、GPU 構成は `profiles`（`gpu`）で管理しています。
+ラッパーはホストからは `./docker/run-docker.sh` 経由で実行し、Dev Container / プロジェクトコンテナ内ではその環境で実行する設計です。**ホストにインストールした Python ツールへ暗黙にフォールバックしません。** 各ラッパーをさらに Docker ラッパーで包む必要はありません。
 
-`docker/run-docker.sh` を使うと、`nvidia-smi` の実行可否を判定して自動で切り替えます。
+## 5. Docker で任意のコマンドを実行する
 
-- NVIDIA GPU が使える場合: `app-gpu` サービス（`--profile gpu`）で起動
-- NVIDIA GPU が使えない場合: `app` サービスで起動
+`docker/docker-compose.yml` は単一ファイル構成で、GPU 設定は `gpu` profile にまとめています。`docker/run-docker.sh` は `nvidia-smi` を確認し、NVIDIA GPU が利用可能なら `app-gpu`、そうでなければ `app` サービスを選択します。CPU/GPU と UID/GID の扱いはラッパーに任せてください。
 
 ```bash
-# デフォルトシェル起動
+# デフォルトのシェル
 ./docker/run-docker.sh
 
-# 任意コマンド実行
-./docker/run-docker.sh pytest -q
+# 任意のプロジェクトコマンド
+./docker/run-docker.sh python -m package.module
 ```
 
-日常運用では、`docker compose run ...` の直接実行ではなく `./docker/run-docker.sh` の利用を推奨します。
+通常は `docker compose run ...` を直接使わず、ラッパーを経由してください。テスト・lint・型チェックには、前節の専用ラッパーを優先します。
 
-## Docker ベースイメージの切り替え
+## 6. Docker ベースイメージの切り替え
 
-デフォルトのベースイメージは軽量な `ubuntu:24.04` です。
-GPU / 機械学習用途では、`docker/Dockerfile` の先頭を以下のように書き換えてください。
+既定のベースイメージは `ubuntu:24.04` です。GPU / ML 用に切り替える場合は、`docker/Dockerfile` の先頭を変更します。
 
 ```dockerfile
-# 変更前（デフォルト）
+# 既定
 FROM ubuntu:24.04
 
-# 変更後（ML/CUDA用）
+# CUDA 対応例（置き換えて使用）
 FROM nvidia/cuda:13.0.2-cudnn-runtime-ubuntu24.04
 ```
 
-## ディレクトリ構成
+## 7. Coding Agent の作業フロー
 
-- `.devcontainer/`: Dev Container 設定 (VS Code用)
-- `.agents/instructions/`: 言語別の coding agent instruction
-- `docker/`: docker関連ファイル
-- `AGENTS.md`: コーディング規約 (Google Style, Ruff設定など)
+配布した Skills を使用する場合、役割を次のように分けることで重複調査や過剰検証を抑えられます。
+
+| Skill | 役割 |
+| --- | --- |
+| `repository-overview` | リポジトリ全体の地図を作成し、必要に応じて差分更新する |
+| `targeted-repository-research` | 特定機能や変更影響を必要な範囲だけ調査する |
+| `implementation-plan` | 実装方針と最小限の検証計画を文書化する |
+| `run-in-docker` | 任意のプロジェクトコマンドを Docker ラッパー経由で実行する |
+| `run-ruff-check` / `run-ruff-format` | lint・整形の確認、または許可された自動修正を行う |
+| `run-mypy` / `run-pytest` | 型チェック・テストを専用ラッパー経由で実行する |
+
+コード変更時は、必要な調査を再利用し、実装前の Plan を人間が確認してから作業を進める運用を想定しています。各 Skill は、指定範囲のチェックが十分に成功した時点で停止し、理由なく全体検証を繰り返しません。
+
+## 8. 主なディレクトリ
+
+| パス | 用途 |
+| --- | --- |
+| `agent-source/` | 配布元となる共通の Coding Agent 設定 |
+| `AGENTS.md` | 生成される共通の Coding Agent 向けガイドライン |
+| `.agents/instructions/` | 生成される言語別・用途別の指示 |
+| `.agents/skills/` | 対象ホスト有効時に生成される Skills |
+| `.devcontainer/` | VS Code Dev Container 設定 |
+| `docker/` | Dockerfile、Compose、実行ラッパー |
+| `scripts/pre-commit/` | 品質チェック用ラッパー |
+| `src/` | Python ソースコード |
+| `tests/` | テストコード |
