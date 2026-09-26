@@ -1,129 +1,36 @@
 ---
 name: run-mypy
-description: Use this skill when asked to run mypy, type-check Python code, investigate mypy errors, or verify Python typing. Always execute mypy through the repository wrapper script so it works consistently from both the host environment and devcontainer/container environments.
+description: Run or diagnose Python static type checks through the repository mypy wrapper. Preserve the requested arguments and scope; do not invoke mypy or Docker directly.
 argument-hint: "[mypy args ...]"
---------------------------------
+---
 
 # Run mypy
 
-Use this skill when the user asks to:
+Use this skill for mypy execution, type-check verification, or investigation of mypy errors.
 
-* run mypy
-* type-check Python code
-* investigate mypy errors
-* verify typing after code changes
-* check whether a file, package, or project passes static type checking
+## Execution contract
 
-## Core rule
+- Run from the repository root through `./scripts/pre-commit/mypy.sh [MYPY_ARGS ...]`.
+- Preserve user-supplied arguments, targets, and scope exactly. Do not silently expand a file check into a project-wide check or weaken configured semantics.
+- The wrapper selects execution through `./docker/run-docker.sh` on the host or within the current project container, as implemented by the wrapper. Do not add another Docker invocation or bypass the wrapper.
+- If the user specifies no target, use the wrapper's default behavior; do not assume which targets it checks without inspecting its implementation when that distinction matters.
+- Do not run `mypy`, `python -m mypy`, or `docker compose ... mypy` directly unless the user explicitly requests a different execution method.
 
-Do not run `mypy` directly.
+## Run
 
-Always run mypy through the repository wrapper script:
-
-```bash
-./scripts/pre-commit/mypy.sh [MYPY_ARGS ...]
-```
-
-Preserve every target and option supplied by the user. Do not silently replace or broaden the requested scope.
-
-This wrapper handles both cases:
-
-* when called from the local host environment, it runs mypy through `./docker/run-docker.sh`
-* when called from an environment without Docker, such as a devcontainer or project container, it runs `mypy` directly inside the current container
-
-## Before running
-
-From the repository root, confirm that the wrapper exists:
-
-```bash
-test -f ./scripts/pre-commit/mypy.sh
-```
-
-If it is not executable, make it executable:
-
-```bash
-chmod +x ./scripts/pre-commit/mypy.sh
-```
-
-## Common commands
-
-Run mypy with the project default configuration:
+Confirm the wrapper exists. If it lacks executable permission, use `bash ./scripts/pre-commit/mypy.sh ...` instead of modifying file permissions. If it is missing or fails due to the environment, report that separately from type errors; do not silently fall back to host execution.
 
 ```bash
 ./scripts/pre-commit/mypy.sh
-```
-
-Run mypy on a specific package or directory:
-
-```bash
-./scripts/pre-commit/mypy.sh src
-```
-
-Run mypy on a specific file:
-
-```bash
 ./scripts/pre-commit/mypy.sh src/package/module.py
-```
-
-Run mypy with stricter or diagnostic output:
-
-```bash
 ./scripts/pre-commit/mypy.sh --show-error-codes --pretty
 ```
 
-Run mypy using the targets configured in `pyproject.toml`:
+## Failures and rechecks
 
-```bash
-./scripts/pre-commit/mypy.sh
-```
+- Report the exact command, pass/fail result, and only the actionable diagnostics. Distinguish typing errors from wrapper, dependency, configuration, or environment failures.
+- For investigation-only requests, do not edit code. Apply a focused fix only when changes are authorized.
+- After an authorized fix, recheck the smallest relevant failing scope without changing mypy's configured semantics. Recheck the originally requested scope if needed to establish the user's requested result, especially for shared types, imports, or configuration changes.
+- Stop after a sufficient successful check. Do not repeat unchanged checks or run unrelated lint/test suites merely because mypy was requested.
 
-## Error handling
-
-If mypy fails:
-
-1. Report the exact command that was run.
-2. Summarize the important mypy errors.
-3. Identify whether the issue is likely:
-
-   * a real type bug
-   * a missing type annotation
-   * an incorrect stub or import
-   * a missing dependency or environment issue
-   * a config/target path issue
-4. Prefer the smallest focused fix.
-5. After a fix, re-run the smallest failing file or package that can confirm the result without changing mypy's configured semantics.
-6. Expand back to the user-requested scope when needed to establish the requested result, or when the fix affects shared types, imports, configuration, or multiple packages.
-7. Stop after a successful check. Do not repeat it unless relevant files or mypy configuration change afterward.
-
-## Do not do this
-
-Do not run these commands directly unless the user explicitly asks for host execution:
-
-```bash
-mypy
-python -m mypy
-docker compose run app mypy
-docker compose run app-gpu mypy
-```
-
-Use the wrapper script instead.
-
-## Reporting format
-
-After execution, report:
-
-```text
-Command:
-./scripts/pre-commit/mypy.sh ...
-
-Result:
-Passed / Failed
-
-Important output:
-...
-
-Next action:
-...
-```
-
-If the failure is caused by Docker not being available or the wrapper itself failing, explain the environment issue separately from mypy type errors.
+Keep the final response brief: command, result, key diagnostics, and next action if any.

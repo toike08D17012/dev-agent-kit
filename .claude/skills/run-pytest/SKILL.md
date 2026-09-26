@@ -1,168 +1,30 @@
 ---
 name: run-pytest
-description: Use this skill when asked to run pytest, run Python tests, verify test failures, investigate failing tests, or check whether the project test suite passes. Always execute pytest through the repository wrapper script so it works consistently from both the host environment and devcontainer/container environments.
+description: Run Python tests and investigate pytest failures through the repository pytest wrapper, preserving requested scope and avoiding redundant verification.
 argument-hint: "[pytest args ...]"
-----------------------------------
+---
 
 # Run pytest
 
-Use this skill when the user asks to:
+Use this skill for pytest execution, failure investigation, and test verification.
 
-* run pytest
-* run Python tests
-* run a specific test file or test case
-* investigate failing tests
-* verify a fix by running tests
-* check whether the project test suite passes
+## Execution
 
-## Core rule
+- From the repository root, run `./scripts/pre-commit/pytest.sh [PYTEST_ARGS ...]`. Never invoke `pytest`, `python -m pytest`, or Docker Compose directly for this purpose unless the user explicitly requests another execution method.
+- Preserve user-supplied targets and options. Do not silently broaden or replace the requested scope.
+- The wrapper selects Docker execution on the host and direct execution inside the project container/devcontainer. Do not wrap it again in `./docker/run-docker.sh`.
+- Check the wrapper exists only when needed. If it lacks executable permission, use `bash ./scripts/pre-commit/pytest.sh [PYTEST_ARGS ...]` rather than changing repository permissions.
+- If the wrapper or Docker is unavailable, distinguish the environment failure from a test failure. Do not silently fall back to host pytest.
 
-Do not run `pytest` directly.
+## Verification budget
 
-Always run pytest through the repository wrapper script:
+- Run only the requested or task-relevant tests; do not run the whole suite by default when a narrower check suffices.
+- For failures, report failing test nodes and the essential assertion/exception. Investigate the smallest likely cause; do not broaden edits or checks automatically.
+- After a fix, rerun the smallest failing node/file first. Return to the originally requested scope when needed to establish that result; expand further only for shared fixtures, public behavior, configuration, or cross-module changes.
+- Stop once the necessary scope passes. Repeat a successful run only after relevant code, tests, fixtures, or configuration changes.
+- Do not modify code, fixtures, snapshots, or configuration merely to execute a verification request.
 
-```bash
-./scripts/pre-commit/pytest.sh [PYTEST_ARGS ...]
-```
+## Exit status and reporting
 
-Preserve every target and option supplied by the user. Do not silently replace or broaden the requested scope.
-
-This wrapper handles both cases:
-
-* when called from the local host environment, it runs pytest through `./docker/run-docker.sh`
-* when called from an environment without Docker, such as a devcontainer or project container, it runs `pytest` directly inside the current container
-* when pytest exits with code `5`, meaning no tests were collected, the wrapper treats it as success
-
-## Before running
-
-From the repository root, confirm that the wrapper exists:
-
-```bash
-test -f ./scripts/pre-commit/pytest.sh
-```
-
-If it is not executable, make it executable:
-
-```bash
-chmod +x ./scripts/pre-commit/pytest.sh
-```
-
-## Common commands
-
-Run the default test suite:
-
-```bash
-./scripts/pre-commit/pytest.sh
-```
-
-Run tests quietly:
-
-```bash
-./scripts/pre-commit/pytest.sh -q
-```
-
-Run a specific test file:
-
-```bash
-./scripts/pre-commit/pytest.sh tests/test_example.py -q
-```
-
-Run a specific test class or test function:
-
-```bash
-./scripts/pre-commit/pytest.sh tests/test_example.py::TestExample::test_case -q
-```
-
-Run tests matching a keyword:
-
-```bash
-./scripts/pre-commit/pytest.sh -k "keyword" -q
-```
-
-Run tests and stop after the first failure:
-
-```bash
-./scripts/pre-commit/pytest.sh -x
-```
-
-Show captured output:
-
-```bash
-./scripts/pre-commit/pytest.sh -s
-```
-
-## Exit code handling
-
-The pytest wrapper treats exit code `5` as success.
-
-This means:
-
-```text
-No tests collected. Treating pytest exit code 5 as success.
-```
-
-should not be reported as a test failure.
-
-Other non-zero exit codes should be treated as failures.
-
-## Error handling
-
-If pytest fails:
-
-1. Report the exact command that was run.
-2. Summarize the failing test names.
-3. Summarize the important assertion errors or exceptions.
-4. Identify whether the issue is likely:
-
-   * a real behavior bug
-   * a test expectation mismatch
-   * a missing dependency or environment issue
-   * a fixture/setup issue
-   * an import/path/configuration issue
-5. Prefer the smallest focused fix.
-6. After a fix, re-run the last failing test node or smallest failing test file first.
-7. Expand back to the user-requested scope when needed to establish the requested result, or when the fix affects shared fixtures, public behavior, configuration, or multiple modules.
-8. Stop after the required scope passes. Do not repeat a successful test command unless relevant code, tests, fixtures, or configuration change afterward.
-
-## Do not do this
-
-Do not run these commands directly unless the user explicitly asks for host execution:
-
-```bash
-pytest
-python -m pytest
-docker compose run app pytest
-docker compose run app-gpu pytest
-```
-
-Use the wrapper script instead.
-
-## Reporting format
-
-After execution, report:
-
-```text
-Command:
-./scripts/pre-commit/pytest.sh ...
-
-Result:
-Passed / Failed
-
-Important output:
-...
-
-Next action:
-...
-```
-
-If pytest exits with code `5`, report it as:
-
-```text
-Result:
-Passed
-
-Important output:
-No tests were collected. The wrapper treats pytest exit code 5 as success.
-```
-
-If the failure is caused by Docker not being available or the wrapper itself failing, explain the environment issue separately from test failures.
+- The wrapper maps pytest exit code `5` (no tests collected) to success. Report **wrapper succeeded; no tests collected**, not **tests passed**. Other nonzero wrapper exit statuses are failures.
+- Report the exact command, outcome, relevant failures or counts, and next action only if necessary. Keep environment/wrapper failures separate from actual test failures.
